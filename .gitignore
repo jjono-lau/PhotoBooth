@@ -22,3 +22,22 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE metadata
+*.iml
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Tooling caches
+.eslintcache
+*.tsbuildinfo
+
+# Test outputs
+coverage/
+coverage-*/
