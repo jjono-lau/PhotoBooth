@@ -23,13 +23,13 @@ export default function TakePhoto({ videoRef, onCapture, className = "" }) {
   };
 
   return (
-    <button
+
+          <button
       type="button"
       onClick={capture}
-      className={`flex items-center justify-center gap-2 rounded bg-blue-400 px-4 py-2 font-semibold text-white shadow transition hover:bg-blue-500 ${className}`}
+      className={`rounded-full bg-blue-300/60 hover:bg-blue-200 p-3 outline-2 outline-blue-300 ${className}`}
     >
-      <Camera className="h-5 w-5" />
-      Capture
+      <Camera className="h-6 w-6 text-blue-700" />
     </button>
   );
 }
