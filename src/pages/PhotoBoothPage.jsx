@@ -1,17 +1,14 @@
 // PhotoBoothPage.jsx
-// Displays live camera view on the left and four panels on the right.
+// Displays live camera view on the left and four panels for the photos on the right.
 
 import { useRef, useState } from "react";
-// import { captureCounter } from "../utils/Captures.js";
 import CameraView from "../components/CameraView.jsx";
 import TakePhoto from "../components/TakePhoto.jsx";
 import PageLinks from "../components/PageLinks";
 
-// const counter = captureCounter(4);
 
 export default function PhotoBoothPage() {
   const videoRef = useRef(null);
-  // const [counterValue, setCounterValue] = useState(0);
   const [photos, setPhotos] = useState(Array(4).fill(null));
 
   const handleCapture = (dataUrl) => {
@@ -30,22 +27,23 @@ export default function PhotoBoothPage() {
   };
 
   return (
-    // Full-page layout: centered container with two columns
+    
     <>
-      <div className="flex items-center justify-center min-h-screen">
+      {/* Full-page layout: centered container with two columns */}
+      <div className="flex items-center justify-center m-2 gap-4 border-2 bg-gray-400">
         {/* Left column: camera preview area (up to 80% width) */}
         <div className="h-120 flex-none overflow-hidden bg-gray-400 max-w-[80%]">
           <CameraView videoRef={videoRef} />
         </div>
 
         {/* Right column: 4 equal-height controls (20% width) */}
-        <div className="h-120 w-1/5 flex flex-col">
+        <div className="h-120 flex flex-col border border-blue-500">
           {Array(4)
             .fill(null)
             .map((_, i) => (
               <div
                 key={i}
-                className="h-30 w-40 flex-1 flex items-center justify-center"
+                className="h-30 w-40 flex-1 flex items-center justify-center border border-purple-500"
               >
                 {photos[i] && (
                   <img
@@ -60,20 +58,12 @@ export default function PhotoBoothPage() {
       </div>
 
       {/* Bottom row: capture button, counter, and navigation links */}
-      <div className="flex w-full max-w-5xl flex-wrap items-center justify-center gap-3">
+      <div className="flex items-center justify-center m-2 gap-4 border-2 bg-gray-400">
         <TakePhoto
           videoRef={videoRef}
           onCapture={handleCapture}
           className="flex-1 min-w-[140px]"
         />
-
-        {/* <button
-          type="button"
-          className="flex-1 min-w-[140px] rounded border border-green-400 bg-green-300 px-4 py-2 font-semibold text-slate-900 transition hover:bg-green-400"
-          onClick={() => setCounterValue(counter())}
-        >
-          count is {counterValue}
-        </button> */}
 
         <PageLinks
           to="/"
