@@ -2,6 +2,7 @@
 // Displays live camera view on the left and four panels for the photos on the right.
 
 import { useRef, useState } from "react";
+import { Camera, RotateCcw, SlidersHorizontal   } from "lucide-react";
 import CameraView from "../components/CameraView.jsx";
 import TakePhoto from "../components/TakePhoto.jsx";
 import PageLinks from "../components/PageLinks";
@@ -33,8 +34,27 @@ export default function PhotoBoothPage() {
       {/* w-194 is 48.5rem which is w-150 + w-40 + gap-4 calcaultion */}
       <div className="flex items-center justify-center w-194 m-2 gap-4 outline-1 outline-red-500 ">
         {/* Left column: camera preview area (up to 80% width) */}
-        <div className="h-120 w-150 flex-none overflow-hidden bg-gray-400 max-w-[80%] outline-1">
+        <div className="relative h-120 w-150 flex-none overflow-hidden bg-gray-400 max-w-[80%] outline-1">
           <CameraView videoRef={videoRef} />
+            <button
+            type="button"
+            className="absolute bottom-4 left-4 rounded-full bg-purple-300/60 p-3 outline-2 outline-purple-300"
+          >
+            <SlidersHorizontal className="h-6 w-6 text-purple-600" />
+          </button>
+          
+          <button
+            type="button"
+            className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-blue-300/60 p-3 outline-2 outline-blue-300"
+          >
+            <Camera className="h-6 w-6 text-blue-700" />
+          </button>
+          <button
+            type="button"
+            className="absolute bottom-4 right-4 rounded-full bg-red-100/60 p-3 outline-2 outline-red-100"
+          >
+            <RotateCcw className="h-6 w-6 text-red-500" />
+          </button>
         </div>
 
         {/* Right column: 4 equal-height controls (20% width) */}
