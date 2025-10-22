@@ -28,22 +28,23 @@ export default function PhotoBoothPage() {
 
   return (
     
-    <>
+    <div className="grid place-items-center min-h-screen">
       {/* Full-page layout: centered container with two columns */}
-      <div className="flex items-center justify-center m-2 gap-4 border-2 bg-gray-400">
+      {/* w-194 is 48.5rem which is w-150 + w-40 + gap-4 calcaultion */}
+      <div className="flex items-center justify-center w-194 m-2 gap-4 outline-1 outline-red-500 ">
         {/* Left column: camera preview area (up to 80% width) */}
-        <div className="h-120 flex-none overflow-hidden bg-gray-400 max-w-[80%]">
+        <div className="h-120 w-150 flex-none overflow-hidden bg-gray-400 max-w-[80%] outline-1">
           <CameraView videoRef={videoRef} />
         </div>
 
         {/* Right column: 4 equal-height controls (20% width) */}
-        <div className="h-120 flex flex-col border border-blue-500">
+        <div className="h-120 flex flex-col outline outline-blue-500">
           {Array(4)
             .fill(null)
             .map((_, i) => (
               <div
                 key={i}
-                className="h-30 w-40 flex-1 flex items-center justify-center border border-purple-500"
+                className="h-30 w-40 flex-1 flex items-center justify-center outline outline-purple-500"
               >
                 {photos[i] && (
                   <img
@@ -58,7 +59,7 @@ export default function PhotoBoothPage() {
       </div>
 
       {/* Bottom row: capture button, counter, and navigation links */}
-      <div className="flex items-center justify-center m-2 gap-4 border-2 bg-gray-400">
+      <div className="flex items-center justify-center w-194 m-2 gap-4 outline-1 outline-red-500">
         <TakePhoto
           videoRef={videoRef}
           onCapture={handleCapture}
@@ -89,6 +90,6 @@ export default function PhotoBoothPage() {
           Go to Photo Editor
         </PageLinks>
       </div>
-    </>
+    </div>
   );
 }
