@@ -18,13 +18,13 @@ function CameraView() {
     startCamera();
   }, []);
 
-  // Transform - scaleX(-1) mirrors the output. Remove to unmirror.
+  // transform scale-x-[-1] mirrors the output. Remove to unmirror.
   return (
     <video
       ref={videoRef}
       autoPlay
       playsInline
-      className="h-full w-auto  object-cover"
+      className="h-full w-auto  object-cover transform scale-x-[-1]"
     />
   );
 }
