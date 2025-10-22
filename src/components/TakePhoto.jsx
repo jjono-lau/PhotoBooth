@@ -29,7 +29,7 @@ export default function TakePhoto({ videoRef, onCapture, className = "" }) {
       onClick={capture}
       className={`rounded-full bg-blue-300/60 hover:bg-blue-200 p-3 outline-2 outline-blue-300 ${className}`}
     >
-      <Camera className="h-6 w-6 text-blue-700" />
+      <Camera className="text-blue-700" />
     </button>
   );
 }

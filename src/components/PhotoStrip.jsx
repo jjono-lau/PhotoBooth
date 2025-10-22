@@ -1,0 +1,21 @@
+// components/PhotoStrips.jsx
+
+export default function PhotoStrips({ photos, className = "" }) {
+  return (
+    <div className={`grid grid-rows-4 ${className}`}>
+      {photos.map((src, i) => (
+        <div key={i} className="flex items-center justify-center outline">
+          {src ? (
+            <img
+              src={src}
+              alt={`Capture ${i + 1}`}
+              className="max-h-full max-w-full object-contain"
+            />
+          ) : (
+            <span className="text-xs text-gray-500">Image {i + 1}</span>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}

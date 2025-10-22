@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+@layer base {
+  button {
+    @apply p-3 outline-2 absolute bottom-4 rounded-full flex items-center justify-center;
+  }
+  /* Applies to all Lucide icons since they render as <svg> */
+  svg {
+    @apply h-6 w-6;
+  }
+}
