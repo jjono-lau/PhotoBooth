@@ -2,30 +2,28 @@
 // Displays live camera view on the left and four panels for the photos on the right.
 
 import { useRef, useState } from "react";
-import { Camera, RotateCcw, SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
 import CameraView from "../components/CameraView.jsx";
 import TakePhoto from "../components/TakePhoto.jsx";
 import PageLinks from "../components/PageLinks";
 import PhotoStrips from "../components/PhotoStrip.jsx";
+import RetakePhoto from "../components/RetakePhoto.jsx";
+import {
+  createPhotoSlots,
+  addPhotoToSlots,
+  hasEmptySlot,
+} from "../utils/photoCounter.js";
 
 export default function PhotoBoothPage() {
   const videoRef = useRef(null);
-  const [photos, setPhotos] = useState(Array(4).fill(null));
+  const [photos, setPhotos] = useState(() => createPhotoSlots());
 
   const handleCapture = (dataUrl) => {
     if (!dataUrl) return;
-    setPhotos((prev) => {
-      const next = [...prev];
-      const emptyIndex = next.findIndex((slot) => slot === null);
-      if (emptyIndex === -1) {
-        next.shift();
-        next.push(dataUrl);
-      } else {
-        next[emptyIndex] = dataUrl;
-      }
-      return next;
-    });
+    setPhotos((prev) => addPhotoToSlots(prev, dataUrl));
   };
+
+  const canCapture = hasEmptySlot(photos);
 
   return (
     <div className="grid place-items-center min-h-screen">
@@ -34,7 +32,6 @@ export default function PhotoBoothPage() {
       <div className="flex items-center justify-center w-194 m-2 gap-4 ">
         {/* Left column: camera preview area (up to 80% width) */}
         <div className="relative h-120 w-150 flex-none overflow-hidden bg-gray-400 max-w-[80%]">
-
           <CameraView videoRef={videoRef} />
 
           <button
@@ -47,16 +44,11 @@ export default function PhotoBoothPage() {
           <TakePhoto
             videoRef={videoRef}
             onCapture={handleCapture}
+            disabled={!canCapture}
             className="left-1/2 -translate-x-1/2 "
           />
 
-          <button
-            type="button"
-            className="right-4 bg-red-100/60 hover:bg-red-200 outline-red-100"
-          >
-            <RotateCcw className="text-red-500" />
-          </button>
-          
+          <RetakePhoto videoRef={videoRef} photos={photos} setPhotos={setPhotos} />
         </div>
 
         <PhotoStrips photos={photos} className="h-120 w-40" />
