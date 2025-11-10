@@ -3,7 +3,11 @@
 
 import { useEffect, useMemo, useRef } from "react";
 
-function CameraView({ videoRef: externalRef }) {
+function CameraView({
+  videoRef: externalRef,
+  filterCss = "none",
+  overlayClassName = "",
+}) {
   const fallbackRef = useRef(null);
   const videoRef = useMemo(() => externalRef ?? fallbackRef, [externalRef]);
 
@@ -21,12 +25,19 @@ function CameraView({ videoRef: externalRef }) {
 
   // transform scale-x-[-1] mirrors the output. Remove to unmirror.
   return (
-    <video
-      ref={videoRef}
-      autoPlay
-      playsInline
-      className="h-full w-auto  object-cover transform scale-x-[-1]"
-    />
+    <div className="relative h-full w-full">
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        className="h-full w-full object-cover transform scale-x-[-1]"
+        style={{ filter: filterCss }}
+      />
+
+      {overlayClassName ? (
+        <div className={`filter-overlay ${overlayClassName}`} />
+      ) : null}
+    </div>
   );
 }
 

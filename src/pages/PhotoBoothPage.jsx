@@ -9,15 +9,21 @@ import PageLinks from "../components/PageLinks";
 import PhotoStrips from "../components/PhotoStrip.jsx";
 import RetakePhoto from "../components/RetakePhoto.jsx";
 import TimerProvider, { TimerOverlay } from "../components/Timer.jsx";
+import PhotoBoothSettingsForm from "../components/PhotoBoothSettingsForm.jsx";
 import {
   createPhotoSlots,
   addPhotoToSlots,
   hasEmptySlot,
 } from "../utils/photoCounter.js";
+import { getTimerSeconds, setTimerSeconds } from "../utils/timerConfig.js";
+import { getFilterConfig, PHOTO_FILTERS } from "../utils/photoFilters.js";
 
 export default function PhotoBoothPage() {
   const videoRef = useRef(null);
   const [photos, setPhotos] = useState(() => createPhotoSlots());
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState(PHOTO_FILTERS[0].id);
+  const [timerSeconds, setTimerSecondsState] = useState(getTimerSeconds());
 
   const handleCapture = (dataUrl) => {
     if (!dataUrl) return;
@@ -25,6 +31,19 @@ export default function PhotoBoothPage() {
   };
 
   const canCapture = hasEmptySlot(photos);
+  const filterConfig = getFilterConfig(selectedFilter);
+  const filterCss = filterConfig.css;
+  const overlayClassName = filterConfig.overlayClassName ?? "";
+  const filterEffects = filterConfig.effects ?? null;
+
+  const handleTimerChange = (seconds) => {
+    setTimerSeconds(seconds);
+    setTimerSecondsState(seconds);
+  };
+
+  const handleFilterChange = (filterId) => {
+    setSelectedFilter(filterId);
+  };
 
   return (
     <div className="grid place-items-center min-h-screen">
@@ -34,11 +53,16 @@ export default function PhotoBoothPage() {
         {/* Left column: camera preview area (up to 80% width) */}
         <TimerProvider>
           <div className="relative h-120 w-150 flex-none overflow-hidden bg-gray-400 max-w-[80%]">
-            <CameraView videoRef={videoRef} />
+            <CameraView
+              videoRef={videoRef}
+              filterCss={filterCss}
+              overlayClassName={overlayClassName}
+            />
 
             <button
               type="button"
-              className="left-4 bg-purple-300/60 hover:bg-purple-200 outline-purple-300"
+              onClick={() => setSettingsOpen(true)}
+              className="booth-control-button left-4 bg-purple-300/60 hover:bg-purple-200 outline-purple-300"
             >
               <SlidersHorizontal className="text-purple-600" />
             </button>
@@ -46,6 +70,9 @@ export default function PhotoBoothPage() {
             <TakePhoto
               videoRef={videoRef}
               onCapture={handleCapture}
+              countdownSeconds={timerSeconds}
+              filterCss={filterCss}
+              filterEffects={filterEffects}
               disabled={!canCapture}
               className="left-1/2 -translate-x-1/2 "
             />
@@ -54,6 +81,9 @@ export default function PhotoBoothPage() {
               videoRef={videoRef}
               photos={photos}
               setPhotos={setPhotos}
+              countdownSeconds={timerSeconds}
+              filterCss={filterCss}
+              filterEffects={filterEffects}
             />
 
             <TimerOverlay />
@@ -89,6 +119,15 @@ export default function PhotoBoothPage() {
           Go to Photo Editor
         </PageLinks>
       </div>
+
+      <PhotoBoothSettingsForm
+        isOpen={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        selectedFilter={selectedFilter}
+        onFilterChange={handleFilterChange}
+        timerSeconds={timerSeconds}
+        onTimerChange={handleTimerChange}
+      />
     </div>
   );
 }

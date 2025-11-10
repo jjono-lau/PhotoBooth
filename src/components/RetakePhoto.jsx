@@ -9,6 +9,8 @@ export default function RetakePhoto({
   photos = [],
   setPhotos,
   countdownSeconds,
+  filterCss = "none",
+  filterEffects = null,
   className = "",
 }) {
   const canRetake = photos.some(Boolean);
@@ -20,7 +22,7 @@ export default function RetakePhoto({
 
   const executeRetake = () => {
     if (!setPhotos) return;
-    const dataUrl = captureFrame(videoRef);
+    const dataUrl = captureFrame(videoRef, filterCss, filterEffects);
     if (!dataUrl) return;
 
     setPhotos((prev) => replaceLastFilledSlot(prev, dataUrl));
@@ -37,7 +39,7 @@ export default function RetakePhoto({
       type="button"
       onClick={handleRetake}
       disabled={!canRetake}
-      className={`right-4 rounded-full bg-red-100/60 p-3 outline-2 outline-red-100 transition hover:bg-red-200 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+      className={`booth-control-button right-4 bg-red-100/60 outline-red-100 transition hover:bg-red-200 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
     >
       <RotateCcw className="text-red-500" />
     </button>

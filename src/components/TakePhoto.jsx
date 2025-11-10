@@ -7,6 +7,8 @@ export default function TakePhoto({
   videoRef,
   onCapture,
   countdownSeconds,
+  filterCss = "none",
+  filterEffects = null,
   disabled = false,
   className = "",
 }) {
@@ -17,7 +19,7 @@ export default function TakePhoto({
       : getTimerSeconds();
 
   const capture = () => {
-    const dataUrl = captureFrame(videoRef);
+    const dataUrl = captureFrame(videoRef, filterCss, filterEffects);
     if (onCapture) onCapture(dataUrl);
   };
 
@@ -32,7 +34,7 @@ export default function TakePhoto({
       type="button"
       onClick={handleClick}
       disabled={disabled}
-      className={`rounded-full bg-blue-300/60 hover:bg-blue-200 p-3 outline-2 outline-blue-300 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+      className={`booth-control-button bg-blue-300/60 hover:bg-blue-200 outline-blue-300 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
     >
       <Camera className="text-blue-700" />
     </button>

@@ -1,11 +1,42 @@
 @import "tailwindcss";
 
 @layer base {
-  button {
-    @apply p-3 outline-2 absolute bottom-4 rounded-full flex items-center justify-center;
-  }
   /* Applies to all Lucide icons since they render as <svg> */
   svg {
     @apply h-6 w-6;
+  }
+}
+
+@layer components {
+  .booth-control-button {
+    @apply absolute bottom-4 flex items-center justify-center rounded-full p-3 outline-2;
+  }
+
+  .filter-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .filter-overlay--film {
+    background-image:
+      radial-gradient(circle at center, rgba(255, 239, 206, 0.12) 0%, rgba(15, 10, 0, 0.55) 75%),
+      repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.04) 0px,
+        rgba(0, 0, 0, 0.04) 1px
+      );
+    mix-blend-mode: soft-light;
+    opacity: 0.6;
+    animation: film-grain 1.4s steps(2) infinite;
+  }
+}
+
+@keyframes film-grain {
+  0% {
+    background-position: 0 0, 0 0;
+  }
+  100% {
+    background-position: 120px 0, 0 120px;
   }
 }
