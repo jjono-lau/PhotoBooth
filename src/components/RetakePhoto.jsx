@@ -1,21 +1,35 @@
 import { RotateCcw } from "lucide-react";
 import { captureFrame } from "../utils/captureFrame.js";
 import { replaceLastFilledSlot } from "../utils/photoCounter.js";
+import { getTimerSeconds } from "../utils/timerConfig.js";
+import { useTimer } from "./Timer.jsx";
 
 export default function RetakePhoto({
   videoRef,
   photos = [],
   setPhotos,
+  countdownSeconds,
   className = "",
 }) {
   const canRetake = photos.some(Boolean);
+  const { startCountdown } = useTimer();
+  const countdownValue =
+    typeof countdownSeconds === "number"
+      ? countdownSeconds
+      : getTimerSeconds();
 
-  const handleRetake = () => {
-    if (!canRetake || !setPhotos) return;
+  const executeRetake = () => {
+    if (!setPhotos) return;
     const dataUrl = captureFrame(videoRef);
     if (!dataUrl) return;
 
     setPhotos((prev) => replaceLastFilledSlot(prev, dataUrl));
+  };
+
+  const handleRetake = () => {
+    if (!canRetake) return;
+    if (startCountdown) startCountdown(executeRetake, countdownValue);
+    else executeRetake();
   };
 
   return (
