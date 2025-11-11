@@ -4,12 +4,13 @@
 import { useRef, useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import CameraView from "../components/CameraView.jsx";
-import TakePhoto from "../components/TakePhoto.jsx";
 import PageLinks from "../components/PageLinks";
+import PhonePreview from "../components/PhonePreview.jsx";
+import PhotoBoothSettingsForm from "../components/PhotoBoothSettingsForm.jsx";
 import PhotoStrips from "../components/PhotoStrip.jsx";
 import RetakePhoto from "../components/RetakePhoto.jsx";
+import TakePhoto from "../components/TakePhoto.jsx";
 import TimerProvider, { TimerOverlay } from "../components/Timer.jsx";
-import PhotoBoothSettingsForm from "../components/PhotoBoothSettingsForm.jsx";
 import {
   addPhotoToSlots,
   createPhotoSlots,
@@ -46,79 +47,76 @@ export default function PhotoBoothPage() {
   };
 
   return (
-    <div className="grid place-items-center min-h-screen">
-      {/* Full-page layout: centered container with two columns */}
-      {/* w-194 is 48.5rem which is w-150 + w-40 + gap-4 calcaultion */}
-      <div className="flex items-center justify-center w-194 m-2 gap-4 ">
-        {/* Left column: camera preview area (up to 80% width) */}
-        <TimerProvider>
-          <div className="relative h-120 w-150 flex-none overflow-hidden bg-gray-400 max-w-[80%]">
-            <CameraView
-              videoRef={videoRef}
-              filterCss={filterCss}
-              overlayClassName={overlayClassName}
-            />
+    <>
+      <div className="flex min-h-screen w-full flex-col items-center justify-center px-4 py-8">
+        <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-6 lg:flex-row lg:items-start lg:justify-center">
+          <TimerProvider>
+            <div className="relative flex w-full max-w-[18rem] flex-none overflow-hidden bg-gray-400 shadow-lg sm:max-w-[30rem] md:max-w-[26rem] lg:h-120 lg:w-150 lg:max-w-none">
+              <div className="relative aspect-[4/3] w-full lg:h-full lg:w-full lg:aspect-auto">
+                <CameraView
+                  videoRef={videoRef}
+                  filterCss={filterCss}
+                  overlayClassName={overlayClassName}
+                />
+                <PhonePreview photos={photos} />
+                <button
+                  type="button"
+                  onClick={() => setSettingsOpen(true)}
+                  className="booth-control-button left-4 bg-purple-300/60 hover:bg-purple-200 outline-purple-300"
+                >
+                  <SlidersHorizontal className="text-purple-600" />
+                </button>
+                <TakePhoto
+                  videoRef={videoRef}
+                  onCapture={handleCapture}
+                  countdownSeconds={timerSeconds}
+                  filterCss={filterCss}
+                  filterEffects={filterEffects}
+                  disabled={!canCapture}
+                  className="left-1/2 -translate-x-1/2"
+                />
+                <RetakePhoto
+                  videoRef={videoRef}
+                  photos={photos}
+                  setPhotos={setPhotos}
+                  countdownSeconds={timerSeconds}
+                  filterCss={filterCss}
+                  filterEffects={filterEffects}
+                />
+                <TimerOverlay />
+              </div>
+            </div>
+          </TimerProvider>
 
-            <button
-              type="button"
-              onClick={() => setSettingsOpen(true)}
-              className="booth-control-button left-4 bg-purple-300/60 hover:bg-purple-200 outline-purple-300"
-            >
-              <SlidersHorizontal className="text-purple-600" />
-            </button>
-
-            <TakePhoto
-              videoRef={videoRef}
-              onCapture={handleCapture}
-              countdownSeconds={timerSeconds}
-              filterCss={filterCss}
-              filterEffects={filterEffects}
-              disabled={!canCapture}
-              className="left-1/2 -translate-x-1/2 "
-            />
-
-            <RetakePhoto
-              videoRef={videoRef}
-              photos={photos}
-              setPhotos={setPhotos}
-              countdownSeconds={timerSeconds}
-              filterCss={filterCss}
-              filterEffects={filterEffects}
-            />
-
-            <TimerOverlay />
+          <div className="hidden lg:block">
+            <PhotoStrips photos={photos} className="h-120 w-40" />
           </div>
-        </TimerProvider>
+        </div>
 
-        <PhotoStrips photos={photos} className="h-120 w-40" />
-      </div>
-
-      {/* Bottom row: capture button, counter, and navigation links */}
-      <div className="flex items-center justify-center w-194 m-2 gap-4">
-        <PageLinks
-          to="/"
-          variant="blue"
-          className="flex-1 min-w-[140px] px-4 py-2 text-center font-semibold"
-        >
-          Go to Home Page
-        </PageLinks>
-
-        <PageLinks
-          to="/booth"
-          variant="red"
-          className="flex-1 min-w-[140px] px-4 py-2 text-center font-semibold"
-        >
-          Go to Photo Booth
-        </PageLinks>
-
-        <PageLinks
-          to="/edit"
-          variant="purple"
-          className="flex-1 min-w-[140px] px-4 py-2 text-center font-semibold"
-          state={{ photos }}
-        >
-          Go to Photo Editor
-        </PageLinks>
+        <div className="mt-8 flex w-full max-w-4xl flex-wrap justify-center gap-4">
+          <PageLinks
+            to="/"
+            variant="blue"
+            className="flex-1 min-w-[140px] px-4 py-2 text-center font-semibold"
+          >
+            Go to Home Page
+          </PageLinks>
+          <PageLinks
+            to="/booth"
+            variant="red"
+            className="flex-1 min-w-[140px] px-4 py-2 text-center font-semibold"
+          >
+            Go to Photo Booth
+          </PageLinks>
+          <PageLinks
+            to="/edit"
+            variant="purple"
+            className="flex-1 min-w-[140px] px-4 py-2 text-center font-semibold"
+            state={{ photos }}
+          >
+            Go to Photo Editor
+          </PageLinks>
+        </div>
       </div>
 
       <PhotoBoothSettingsForm
@@ -129,6 +127,6 @@ export default function PhotoBoothPage() {
         timerSeconds={timerSeconds}
         onTimerChange={handleTimerChange}
       />
-    </div>
+    </>
   );
 }
