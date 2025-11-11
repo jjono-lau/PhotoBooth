@@ -18,6 +18,7 @@ import {
 } from "../utils/photoCounter.js";
 import { getTimerSeconds, setTimerSeconds } from "../utils/timerConfig.js";
 import { getFilterConfig, PHOTO_FILTERS } from "../utils/photoFilters.js";
+import pb4 from "../assets/pb4.png";
 
 export default function PhotoBoothPage() {
   const videoRef = useRef(null);
@@ -48,11 +49,14 @@ export default function PhotoBoothPage() {
 
   return (
     <>
-      <div className="flex min-h-screen w-full flex-col items-center justify-center px-4 py-8">
-        <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-6 lg:flex-row lg:items-start lg:justify-center">
+      <div
+        className="flex min-h-screen w-full flex-col items-center justify-center bg-repeat px-4 py-8"
+        style={{ backgroundImage: `url(${pb4})` }}
+      >
+        <div className="mx-auto flex w-full  flex-col items-center gap-6 lg:flex-row lg:items-start lg:justify-center">
           <TimerProvider>
-            <div className="relative flex w-full max-w-[18rem] flex-none overflow-hidden bg-gray-400 shadow-lg sm:max-w-[30rem] md:max-w-[26rem] lg:h-120 lg:w-150 lg:max-w-none">
-              <div className="relative aspect-[4/3] w-full lg:h-full lg:w-full lg:aspect-auto">
+            <div className="relative flex w-full flex-none overflow-hidden bg-gray-400 shadow-lg sm:max-w-[30rem] md:max-w-[26rem] lg:h-120 lg:w-150 lg:max-w-none">
+              <div className="relative w-full sm:aspect-[4/3] lg:h-full lg:w-full lg:aspect-auto">
                 <CameraView
                   videoRef={videoRef}
                   filterCss={filterCss}
