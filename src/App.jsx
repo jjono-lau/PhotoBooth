@@ -1,11 +1,21 @@
 // App.jsx
 
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import PhotoBoothPage from "./pages/PhotoBoothPage.jsx";
 import HeroPage from "./pages/Hero.jsx";
 import PhotoEditPage from "./pages/PhotoEditPage.jsx";
+import { stopCameraStream } from "./utils/cameraManager.js";
 
 export default function App() {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname !== "/booth") {
+      stopCameraStream();
+    }
+  }, [location.pathname]);
+
   return (
     <Routes>
       <Route path="/" element={<HeroPage />} />
