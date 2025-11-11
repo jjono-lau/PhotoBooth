@@ -2,6 +2,7 @@
 
 export default function PhotoStrips({ photos, className = "" }) {
   return (
+    <div className={"outline"}>
     <div className={`grid grid-rows-4 ${className}`}>
       {photos.map((src, i) => (
         <div key={i} className="flex items-center justify-center outline">
@@ -16,6 +17,7 @@ export default function PhotoStrips({ photos, className = "" }) {
           )}
         </div>
       ))}
+    </div>
     </div>
   );
 }

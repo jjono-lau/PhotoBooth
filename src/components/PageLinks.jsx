@@ -1,7 +1,13 @@
 // components/PageLinks.jsx
 import { Link } from "react-router-dom";
 
-export default function PageLinks({ to, children, variant = "blue", className = "" }) {
+export default function PageLinks({
+  to,
+  children,
+  variant = "blue",
+  className = "",
+  ...linkProps
+}) {
   const base =
     "flex items-center justify-center p-1 rounded border ";
   const colors = {
@@ -13,7 +19,11 @@ export default function PageLinks({ to, children, variant = "blue", className = 
   };
 
   return (
-    <Link to={to} className={`${base} ${colors[variant]} ${className}`}>
+    <Link
+      to={to}
+      className={`${base} ${colors[variant]} ${className}`}
+      {...linkProps}
+    >
       {children}
     </Link>
   );
