@@ -2,22 +2,45 @@ export function captureFrame(videoRef, filterCss = "none", effects = null) {
   const video = videoRef?.current;
   if (!video) return null;
 
-  const width = video.videoWidth;
-  const height = video.videoHeight;
-  if (!width || !height) return null;
+  const sourceWidth = video.videoWidth;
+  const sourceHeight = video.videoHeight;
+  if (!sourceWidth || !sourceHeight) return null;
+
+  const targetWidth = video.clientWidth || sourceWidth;
+  const targetHeight = video.clientHeight || sourceHeight;
+  const targetAspect =
+    targetWidth && targetHeight
+      ? targetWidth / targetHeight
+      : sourceWidth / sourceHeight;
+  const sourceAspect = sourceWidth / sourceHeight;
+
+  let sx = 0;
+  let sy = 0;
+  let sWidth = sourceWidth;
+  let sHeight = sourceHeight;
+
+  if (sourceAspect > targetAspect) {
+    // Video is wider than preview window; crop horizontally (match object-cover)
+    sWidth = Math.round(sourceHeight * targetAspect);
+    sx = Math.round((sourceWidth - sWidth) / 2);
+  } else if (sourceAspect < targetAspect) {
+    // Video is taller than preview window; crop vertically
+    sHeight = Math.round(sourceWidth / targetAspect);
+    sy = Math.round((sourceHeight - sHeight) / 2);
+  }
 
   const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
+  canvas.width = sWidth;
+  canvas.height = sHeight;
   const ctx = canvas.getContext("2d");
 
   // Mirror so the saved image matches the mirrored preview
-  ctx.translate(width, 0);
+  ctx.translate(canvas.width, 0);
   ctx.scale(-1, 1);
   ctx.filter = filterCss || "none";
-  ctx.drawImage(video, 0, 0, width, height);
+  ctx.drawImage(video, sx, sy, sWidth, sHeight, 0, 0, canvas.width, canvas.height);
 
-  applyEffects(ctx, width, height, effects);
+  applyEffects(ctx, canvas.width, canvas.height, effects);
 
   return canvas.toDataURL("image/png");
 }

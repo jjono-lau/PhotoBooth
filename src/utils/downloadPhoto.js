@@ -6,10 +6,10 @@ const DEFAULT_SCALE = 3;
 const DEFAULT_CROP_INSET = 1; // CSS px trimmed from each edge
 const MAX_PIXEL_RATIO = 6;
 const EDGE_ADJUSTMENT = {
-  top: -1,
-  right: 1,
-  bottom: 1,
-  left: -1,
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0,
 };
 
 /**

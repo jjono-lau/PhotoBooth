@@ -55,8 +55,8 @@ export default function PhotoBoothPage() {
       >
         <div className="mx-auto flex w-full  flex-col items-center gap-6 lg:flex-row lg:items-start lg:justify-center">
           <TimerProvider>
-            <div className="relative flex w-full flex-none overflow-hidden bg-gray-400 shadow-lg sm:max-w-[30rem] md:max-w-[26rem] lg:h-120 lg:w-150 lg:max-w-none">
-              <div className="relative w-full sm:aspect-[4/3] lg:h-full lg:w-full lg:aspect-auto">
+            <div className="relative flex w-full flex-none overflow-hidden bg-gray-400 shadow-lg sm:max-w-[30rem] md:max-w-[40rem] lg:h-120 lg:w-150 lg:max-w-none">
+              <div className="relative w-full aspect-[4/3] lg:h-full lg:w-full lg:aspect-auto">
                 <CameraView
                   videoRef={videoRef}
                   filterCss={filterCss}
