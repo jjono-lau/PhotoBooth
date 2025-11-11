@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import PageLinks from "../components/PageLinks";
 import PhotoStrips from "../components/PhotoStrip.jsx";
 import FrameEditor from "../components/FrameEditor.jsx";
 import TextEditor from "../components/TextEditor.jsx";
+import DownloadButton from "../components/Download.jsx";
 import {
   FRAME_TYPES,
   FRAME_COLORS,
@@ -20,6 +21,7 @@ import { createPhotoSlots } from "../utils/photoCounter.js";
 
 export default function PhotoEditPage() {
   const location = useLocation();
+  const framePreviewRef = useRef(null);
   const photos = useMemo(() => {
     if (Array.isArray(location.state?.photos)) {
       return location.state.photos;
@@ -204,6 +206,7 @@ export default function PhotoEditPage() {
             <PageLinks to="/edit" variant="purple" className="px-6 py-3 font-semibold">
               Go to Photo Editor
             </PageLinks>
+            <DownloadButton targetRef={framePreviewRef} />
           </div>
         </section>
 
@@ -211,6 +214,7 @@ export default function PhotoEditPage() {
           <div
             className="relative inline-block transition-all duration-300"
             style={frameStyle}
+            ref={framePreviewRef}
           >
             <PhotoStrips photos={photos} className="h-120 w-40 bg-transparent" />
 
