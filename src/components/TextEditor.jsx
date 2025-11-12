@@ -48,12 +48,18 @@ export default function TextEditor({
         menuClassName="max-h-96"
         renderTrigger={(style) =>
           style ? (
-            <span
-              className="text-xl font-semibold leading-tight text-slate-800"
-              style={{ fontFamily: style.fontFamily }}
-            >
-              {style.sample}
-            </span>
+            <div className="flex min-h-[2.5rem] items-center overflow-hidden">
+              <span
+                className=" text-xl font-semibold leading-tight text-slate-800"
+                style={{
+                  fontFamily: style.fontFamily,
+                  lineHeight: "2.5rem",
+                  ...(style.styleOverrides ?? {}),
+                }}
+              >
+                {style.sample}
+              </span>
+            </div>
           ) : (
             <span className="text-sm text-slate-400">Choose a font style</span>
           )
@@ -62,6 +68,7 @@ export default function TextEditor({
           <FontPreview
             text={style.sample}
             fontFamily={style.fontFamily}
+            styleOverrides={style.styleOverrides}
             className={`${
               isActive ? "border-purple-400 bg-purple-50" : ""
             }`}

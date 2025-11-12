@@ -70,7 +70,7 @@ export default function CustomDropDown({
       >
         <span className="flex-1 truncate">{triggerContent}</span>
         <ChevronDown
-          className={`ml-3 h-4 w-4 text-slate-500 transition-transform ${
+          className={`ml-3 h-8 w-4 text-slate-500 transition-transform ${
             open ? "rotate-180" : ""
           }`}
         />
@@ -88,7 +88,7 @@ export default function CustomDropDown({
                 <li key={optionId}>
                   <button
                     type="button"
-                    className={`flex w-full items-start gap-2 px-4 py-3 text-left text-sm transition ${
+                    className={`flex w-full h-20 items-center gap-2 px-3 py-1 text-left text-sm transition ${
                       isActive
                         ? "bg-purple-50 text-purple-700"
                         : "text-slate-600 hover:bg-slate-50"
