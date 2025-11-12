@@ -6,10 +6,13 @@ const Blur = ({
   ...rest
 }) => {
   return (
+    
     <Component
-      className={`rounded-3xl bg-black/40 backdrop-blur shadow-[0_25px_70px_rgba(0,0,0,0.35)] ${className}`}
+    
+      className={`rounded-3xl bg-black/50 backdrop-blur  ${className}`}
       {...rest}
     >
+    
       <div className={`h-full w-full ${paddingClass}`}>{children}</div>
     </Component>
   )
