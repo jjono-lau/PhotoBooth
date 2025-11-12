@@ -5,6 +5,7 @@ import PhotoStrips from "../components/PhotoStrip.jsx";
 import FrameEditor from "../components/FrameEditor.jsx";
 import TextEditor from "../components/TextEditor.jsx";
 import DownloadButton from "../components/Download.jsx";
+import ColorPicker from "../components/ColorPicker.jsx";
 import {
   FRAME_TYPES,
   FRAME_COLORS,
@@ -19,6 +20,28 @@ import {
 } from "../utils/frameTextOptions.js";
 import { createPhotoSlots } from "../utils/photoCounter.js";
 
+const DEFAULT_SHADOW = "0 18px 44px rgba(15, 23, 42, 0.25)";
+
+function hexToRgba(hex, alpha = 1) {
+  let sanitized = hex?.replace("#", "");
+  if (sanitized?.length === 3) {
+    sanitized = sanitized
+      .split("")
+      .map((char) => char + char)
+      .join("");
+  }
+
+  if (!sanitized || sanitized.length !== 6) {
+    return `rgba(0, 0, 0, ${alpha})`;
+  }
+
+  const bigint = parseInt(sanitized, 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
 export default function PhotoEditPage() {
   const location = useLocation();
   const framePreviewRef = useRef(null);
@@ -32,6 +55,10 @@ export default function PhotoEditPage() {
   const [selectedFrameColor, setSelectedFrameColor] = useState(
     FRAME_COLORS[0].id
   );
+  const [customFrameColor, setCustomFrameColor] = useState(
+    FRAME_COLORS[0].backgroundColor
+  );
+  const [isFrameColorPickerOpen, setFrameColorPickerOpen] = useState(false);
   const [frameText, setFrameText] = useState("");
   const [selectedTextStyle, setSelectedTextStyle] = useState(
     FRAME_TEXT_STYLES[0].id
@@ -39,6 +66,10 @@ export default function PhotoEditPage() {
   const [selectedTextColor, setSelectedTextColor] = useState(
     FRAME_TEXT_COLORS[0].id
   );
+  const [customTextColor, setCustomTextColor] = useState(
+    FRAME_TEXT_COLORS[0].value
+  );
+  const [isTextColorPickerOpen, setTextColorPickerOpen] = useState(false);
   const [fontSize, setFontSize] = useState(16);
   const [fontWeight, setFontWeight] = useState(500);
   const [isItalic, setIsItalic] = useState(false);
@@ -55,10 +86,19 @@ export default function PhotoEditPage() {
     setBottomAdjust(0);
   }, [selectedFrameType]);
 
-  const frameColorConfig = useMemo(
-    () => getFrameColorConfig(selectedFrameColor),
-    [selectedFrameColor]
-  );
+  const frameColorConfig = useMemo(() => {
+    if (selectedFrameColor === "custom") {
+      const fallback = customFrameColor || "#ffffff";
+      return {
+        backgroundColor: fallback,
+        borderColor: fallback,
+        borderWidth: 3,
+        borderRadius: 2,
+        shadow: `0 18px 44px ${hexToRgba(fallback, 0.35)}`,
+      };
+    }
+    return getFrameColorConfig(selectedFrameColor);
+  }, [selectedFrameColor, customFrameColor]);
 
   const { adjustedPadding, fontSizeLimit } = useMemo(() => {
     const padding = { ...frameTypeConfig.padding };
@@ -91,7 +131,7 @@ export default function PhotoEditPage() {
       borderColor: frameColorConfig.borderColor,
       borderWidth: `${frameTypeConfig.borderWidth}px`,
       borderRadius: `${frameTypeConfig.borderRadius}px`,
-      boxShadow: frameColorConfig.shadow,
+      boxShadow: frameColorConfig.shadow ?? DEFAULT_SHADOW,
       paddingTop: `${adjustedPadding.top}px`,
       paddingRight: `${adjustedPadding.right}px`,
       paddingBottom: `${adjustedPadding.bottom}px`,
@@ -99,10 +139,12 @@ export default function PhotoEditPage() {
     };
   }, [frameColorConfig, frameTypeConfig, adjustedPadding]);
 
-  const textColorValue = useMemo(
-    () => getFrameTextColor(selectedTextColor).value,
-    [selectedTextColor]
-  );
+  const textColorValue = useMemo(() => {
+    if (selectedTextColor === "custom") {
+      return customTextColor;
+    }
+    return getFrameTextColor(selectedTextColor).value;
+  }, [selectedTextColor, customTextColor]);
 
   const trimmedUserText = frameText.trim();
   const allowFrameText = selectedFrameType !== "classic-even";
@@ -150,6 +192,18 @@ export default function PhotoEditPage() {
   const showTopText = trimmedText && textPlacement === "top";
   const showBottomText = trimmedText && textPlacement === "bottom";
 
+  const handleCustomFrameColorChange = (hex) => {
+    if (!hex) return;
+    setCustomFrameColor(hex);
+    setSelectedFrameColor("custom");
+  };
+
+  const handleCustomTextColorChange = (hex) => {
+    if (!hex) return;
+    setCustomTextColor(hex);
+    setSelectedTextColor("custom");
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 px-4 py-10">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 lg:flex-row">
@@ -176,6 +230,8 @@ export default function PhotoEditPage() {
             onBottomAdjustChange={setBottomAdjust}
             selectedFrameColor={selectedFrameColor}
             onFrameColorChange={setSelectedFrameColor}
+            customFrameColor={customFrameColor}
+            onCustomFrameColorClick={() => setFrameColorPickerOpen(true)}
           />
 
           {allowFrameText ? (
@@ -186,6 +242,8 @@ export default function PhotoEditPage() {
               onTextStyleChange={setSelectedTextStyle}
               selectedTextColor={selectedTextColor}
               onTextColorChange={setSelectedTextColor}
+              customTextColor={customTextColor}
+              onCustomTextColorClick={() => setTextColorPickerOpen(true)}
               fontSize={fontSize}
               onFontSizeChange={setFontSize}
               fontSliderMax={fontSliderMax}
@@ -232,6 +290,25 @@ export default function PhotoEditPage() {
           </div>
         </section>
       </div>
+      {isFrameColorPickerOpen ? (
+        <ColorPicker
+          title="Custom frame color"
+          description="Applies to the frame border and background."
+          value={customFrameColor}
+          onChange={handleCustomFrameColorChange}
+          onClose={() => setFrameColorPickerOpen(false)}
+        />
+      ) : null}
+
+      {isTextColorPickerOpen ? (
+        <ColorPicker
+          title="Custom text color"
+          description="Pick any colour for your caption text."
+          value={customTextColor}
+          onChange={handleCustomTextColorChange}
+          onClose={() => setTextColorPickerOpen(false)}
+        />
+      ) : null}
     </div>
   );
 }

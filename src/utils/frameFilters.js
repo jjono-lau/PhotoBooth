@@ -31,14 +31,14 @@ export const FRAME_TYPES = [
 ];
 
 export const FRAME_COLORS = [
-  {
-    id: "polar-white",
-    label: "Polar White",
-    swatchColor: "#f8f9fb",
-    backgroundColor: "#ffffff",
-    borderColor: "#e5e7eb",
-    shadow: "0 12px 32px rgba(0, 0, 0, 0.18)",
-  },
+{
+  id: "fiery-red",
+  label: "Fiery Red",
+  swatchColor: "#ff5a4f",
+  backgroundColor: "#ffe3e0",
+  borderColor: "#f7b0a9",
+  shadow: "0 15px 35px rgba(255, 90, 79, 0.25)",
+},
   {
     id: "latte-cream",
     label: "Latte Cream",

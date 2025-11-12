@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { Plus } from "lucide-react";
 import {
   FRAME_TYPES,
   FRAME_COLORS,
@@ -14,6 +15,8 @@ export default function FrameEditor({
   onBottomAdjustChange,
   selectedFrameColor,
   onFrameColorChange,
+  onCustomFrameColorClick,
+  customFrameColor = "#ffffff",
   className = "",
 }) {
   const frameTypeConfig = useMemo(
@@ -101,7 +104,7 @@ export default function FrameEditor({
         <h2 className="text-base font-semibold text-slate-700">
           Frame Colors
         </h2>
-        <div className="flex flex-wrap gap-4">
+        <div className="grid grid-cols-3 gap-4 sm:grid-cols-4">
           {FRAME_COLORS.map((palette) => {
             const isActive = palette.id === selectedFrameColor;
             return (
@@ -109,12 +112,12 @@ export default function FrameEditor({
                 key={palette.id}
                 type="button"
                 onClick={() => onFrameColorChange?.(palette.id)}
-                className={`flex flex-col items-center gap-2 text-xs font-medium ${
+                className={`flex flex-col items-start gap-2 text-left text-xs font-medium ${
                   isActive ? "text-slate-900" : "text-slate-500"
                 }`}
               >
                 <span
-                  className={`flex h-12 w-12 items-center justify-center rounded-full border-2 transition ${
+                  className={`flex h-10 w-10 items-center justify-center rounded-full border-2 transition ${
                     isActive
                       ? "border-purple-500 ring-2 ring-purple-200"
                       : "border-transparent"
@@ -127,6 +130,37 @@ export default function FrameEditor({
               </button>
             );
           })}
+
+          <button
+            type="button"
+            onClick={() => {
+              onFrameColorChange?.("custom");
+              onCustomFrameColorClick?.();
+            }}
+            className={`flex flex-col items-start gap-2 text-left text-xs font-medium ${
+              selectedFrameColor === "custom"
+                ? "text-slate-900"
+                : "text-slate-500"
+            }`}
+          >
+            <span
+              className={`flex h-10 w-10 items-center justify-center rounded-full border-2 transition ${
+                selectedFrameColor === "custom"
+                  ? "border-purple-500 ring-2 ring-purple-200"
+                  : "border-dashed border-slate-300"
+              }`}
+              style={{ backgroundColor: customFrameColor }}
+            >
+              <Plus
+                className={`h-5 w-5 ${
+                  selectedFrameColor === "custom"
+                    ? "text-white drop-shadow"
+                    : "text-slate-600"
+                }`}
+              />
+            </span>
+            Custom
+          </button>
         </div>
       </div>
     </div>

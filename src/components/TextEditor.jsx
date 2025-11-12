@@ -1,5 +1,6 @@
 import CustomDropDown from "./CustomDropDown.jsx";
 import FontPreview from "./FontPreview.jsx";
+import { Plus } from "lucide-react";
 import {
   FRAME_TEXT_STYLES,
   FRAME_TEXT_COLORS,
@@ -12,6 +13,8 @@ export default function TextEditor({
   onTextStyleChange,
   selectedTextColor,
   onTextColorChange,
+  customTextColor = "#ffffff",
+  onCustomTextColorClick,
   fontSize,
   onFontSizeChange,
   fontSliderMax,
@@ -78,7 +81,7 @@ export default function TextEditor({
 
       <div className="space-y-3">
         <p className="text-sm font-medium text-slate-600">Text Colour</p>
-        <div className="flex flex-wrap gap-3">
+        <div className="grid grid-cols-3 gap-4">
           {FRAME_TEXT_COLORS.map((color) => {
             const isActive = color.id === selectedTextColor;
             return (
@@ -86,12 +89,12 @@ export default function TextEditor({
                 key={color.id}
                 type="button"
                 onClick={() => onTextColorChange?.(color.id)}
-                className={`flex flex-col items-center text-xs font-medium ${
+                className={`flex flex-col items-start text-left text-xs font-medium ${
                   isActive ? "text-slate-900" : "text-slate-500"
                 }`}
               >
                 <span
-                  className={`flex h-8 w-8 items-center justify-center rounded-full border-2 transition ${
+                  className={`flex h-10 w-10 items-center justify-center rounded-full border-2 transition ${
                     isActive
                       ? "border-purple-500 ring-2 ring-purple-200"
                       : "border-transparent"
@@ -102,6 +105,37 @@ export default function TextEditor({
               </button>
             );
           })}
+
+          <button
+            type="button"
+            onClick={() => {
+              onTextColorChange?.("custom");
+              onCustomTextColorClick?.();
+            }}
+            className={`flex flex-col items-start text-left text-xs font-medium ${
+              selectedTextColor === "custom"
+                ? "text-slate-900"
+                : "text-slate-500"
+            }`}
+          >
+            <span
+              className={`flex h-10 w-10 items-center justify-center rounded-full border-2 transition ${
+                selectedTextColor === "custom"
+                  ? "border-purple-500 ring-2 ring-purple-200"
+                  : "border-dashed border-slate-300"
+              }`}
+              style={{ backgroundColor: customTextColor }}
+            >
+              <Plus
+                className={`h-5 w-5 ${
+                  selectedTextColor === "custom"
+                    ? "text-white drop-shadow"
+                    : "text-slate-600"
+                }`}
+              />
+            </span>
+            Custom
+          </button>
         </div>
       </div>
 
