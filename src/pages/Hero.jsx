@@ -44,13 +44,13 @@ export default function HeroPage() {
         <div className="flex w-full flex-col gap-5 sm:gap-6 md:gap-7 lg:flex-row lg:items-start lg:gap-8">
           <div className="flex flex-1 flex-col gap-4 text-center sm:gap-5 md:gap-5 lg:text-left">
             <header className="space-y-2 sm:space-y-3 md:space-y-3">
-              <p className="text-[0.78rem] font-semibold uppercase tracking-[0.45em] text-purple-200 sm:text-[0.85rem] md:text-[0.9rem]">
+              <p className="hero-tagline text-[clamp(0.8rem,min(3vw,2.8vh),0.95rem)] font-semibold uppercase tracking-[0.45em] text-purple-200 sm:text-[0.88rem] md:text-[0.88rem]">
                 Moments to Memories
               </p>
-              <h1 className="text-[clamp(1.9rem,5vw,3.1rem)] font-black leading-tight sm:text-[clamp(2.2rem,4vw,3.4rem)] md:text-[clamp(2.4rem,3.8vw,3.6rem)] lg:text-[clamp(2.6rem,3.5vw,3.9rem)]">
+              <h1 className="hero-heading text-[clamp(1.85rem,min(5.5vw,4.6vh),3.1rem)] font-black leading-tight sm:text-[clamp(1.9rem,3.1vw,2.8rem)] md:text-[clamp(2.05rem,3.2vw,3rem)] lg:text-[clamp(2.2rem,3vw,3.3rem)]">
                 Snap moments into memories with our pop-up photo booth
               </h1>
-              <p className="text-[0.95rem] text-slate-100/90 sm:text-base md:text-[1.05rem] lg:text-lg">
+              <p className="hero-lead text-[clamp(0.95rem,min(3.7vw,3.3vh),1.18rem)] text-slate-100/90 sm:text-[0.95rem] md:text-[0.9rem] lg:text-[1rem]">
                 Free photobooth experience in seconds. Find your vibe, cue the
                 countdown, and let the magic begin.
               </p>
@@ -59,19 +59,19 @@ export default function HeroPage() {
             <div className="flex w-full flex-col gap-2 sm:flex-row sm:justify-center sm:gap-2.5 md:gap-3 lg:justify-start">
               <section className="flex-1 rounded-3xl border border-white/10 bg-white/5 text-left text-slate-100/90 shadow-xl shadow-black/30 backdrop-blur-sm">
                 <div className="flex flex-col gap-3 px-4 py-4 sm:px-5 sm:py-5 md:px-6 md:py-5 lg:px-7 lg:py-6">
-                  <p className="text-xs font-semibold uppercase tracking-[0.35em] text-purple-200 sm:text-sm md:text-base">
+                  <p className="hero-highlight-heading text-[clamp(0.9rem,min(2.8vw,2.6vh),1rem)] font-semibold uppercase tracking-[0.35em] text-purple-200 sm:text-[0.95rem] md:text-base">
                     Why you'll love it
                   </p>
-                  <ul className="flex flex-col gap-2.5 text-sm sm:text-[0.95rem] md:gap-3 md:text-base">
+                  <ul className="hero-highlight-list flex flex-col gap-3 text-[clamp(0.9rem,min(3vw,2.8vh),1.05rem)] sm:text-[0.95rem] md:gap-3 md:text-base">
                     {highlights.map(({ title, description }) => (
                       <li
                         key={title}
                         className="flex flex-col gap-1 border-l border-white/20 pl-3 sm:pl-4 md:pl-5"
                       >
-                        <span className="text-base font-semibold text-white sm:text-lg md:text-xl">
+                        <span className="hero-highlight-title text-[clamp(1rem,min(3.5vw,3.1vh),1.25rem)] font-semibold text-white sm:text-[1.1rem] md:text-xl">
                           {title}
                         </span>
-                        <span className="text-[0.85rem] text-slate-100/80 sm:text-base md:text-[1.05rem]">
+                        <span className="hero-highlight-desc text-[clamp(0.9rem,min(3.1vw,2.9vh),1.05rem)] text-slate-100/80 sm:text-[0.95rem] md:text-[0.95rem]">
                           {description}
                         </span>
                       </li>
