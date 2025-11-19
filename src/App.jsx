@@ -6,6 +6,7 @@ import PhotoBoothPage from "./pages/PhotoBoothPage.jsx";
 import HeroPage from "./pages/Hero.jsx";
 import PhotoEditPage from "./pages/PhotoEditPage.jsx";
 import { stopCameraStream } from "./utils/cameraManager.js";
+import { GlobalFilters } from "./components/GlobalFilters.jsx";
 
 export default function App() {
   const location = useLocation();
@@ -17,12 +18,13 @@ export default function App() {
   }, [location.pathname]);
 
   return (
-    <Routes>
-      <Route path="/" element={<HeroPage />} />
-      <Route path="/booth" element={<PhotoBoothPage />} />
-      <Route path="/edit" element={<PhotoEditPage />} />
-
-
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={<HeroPage />} />
+        <Route path="/booth" element={<PhotoBoothPage />} />
+        <Route path="/edit" element={<PhotoEditPage />} />
+      </Routes>
+      <GlobalFilters />
+    </>
   );
 }

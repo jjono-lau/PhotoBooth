@@ -13,7 +13,8 @@ export const PHOTO_FILTERS = [
   {
     id: "film",
     label: "Film",
-    css: "contrast(1.15) brightness(1.02) saturate(0.95) sepia(0.4)",
+    // Settings: Exposure +14, Contrast -21, Vibrance +27
+    css: "url(#custom-film) brightness(1.14) contrast(0.79) saturate(1.27)",
     overlayClassName: "filter-overlay--film",
     effects: {
       warmthOverlayOpacity: 0.16,
