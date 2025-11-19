@@ -12,6 +12,8 @@ export default function RetakePhoto({
   filterCss = "none",
   filterEffects = null,
   className = "",
+  onRetakeStart = null,
+  onRetakeComplete = null,
 }) {
   const canRetake = photos.some(Boolean);
   const { startCountdown } = useTimer();
@@ -26,10 +28,12 @@ export default function RetakePhoto({
     if (!dataUrl) return;
 
     setPhotos((prev) => replaceLastFilledSlot(prev, dataUrl));
+    if (typeof onRetakeComplete === "function") onRetakeComplete();
   };
 
   const handleRetake = () => {
     if (!canRetake) return;
+    if (typeof onRetakeStart === "function") onRetakeStart();
     if (startCountdown) startCountdown(executeRetake, countdownValue);
     else executeRetake();
   };

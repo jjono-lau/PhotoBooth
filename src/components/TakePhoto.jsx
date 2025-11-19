@@ -11,6 +11,7 @@ export default function TakePhoto({
   filterEffects = null,
   disabled = false,
   className = "",
+  onBeforeCapture = null,
 }) {
   const { startCountdown } = useTimer();
   const countdownValue =
@@ -25,6 +26,7 @@ export default function TakePhoto({
 
   const handleClick = () => {
     if (disabled) return;
+    if (typeof onBeforeCapture === "function") onBeforeCapture();
     if (startCountdown) startCountdown(capture, countdownValue);
     else capture();
   };

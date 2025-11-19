@@ -1,11 +1,11 @@
-export default function PhonePreview({ photos = [] }) {
+export default function PhonePreview({ photos = [], isVisible = true }) {
   if (!Array.isArray(photos)) return null;
 
   const latestPhoto = [...photos].reverse().find(Boolean);
   const takenCount = photos.filter(Boolean).length;
   const totalCount = photos.length;
 
-  if (!latestPhoto) return null;
+  if (!latestPhoto || !isVisible) return null;
 
   return (
     <div className="pointer-events-none absolute inset-0 z-10 lg:hidden">

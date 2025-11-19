@@ -27,11 +27,16 @@ export default function PhotoBoothPage() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState(PHOTO_FILTERS[0].id);
   const [timerSeconds, setTimerSecondsState] = useState(getTimerSeconds());
+  const [isPhonePreviewVisible, setIsPhonePreviewVisible] = useState(false);
 
   const handleCapture = (dataUrl) => {
     if (!dataUrl) return;
     setPhotos((prev) => addPhotoToSlots(prev, dataUrl));
+    setIsPhonePreviewVisible(true);
   };
+
+  const showLivePreview = () => setIsPhonePreviewVisible(false);
+  const showPhotoPreview = () => setIsPhonePreviewVisible(true);
 
   const canCapture = hasEmptySlot(photos);
   const filterConfig = getFilterConfig(selectedFilter);
@@ -64,7 +69,7 @@ export default function PhotoBoothPage() {
                     filterCss={filterCss}
                     overlayClassName={overlayClassName}
                   />
-                  <PhonePreview photos={photos} />
+                  <PhonePreview photos={photos} isVisible={isPhonePreviewVisible} />
                   <button
                     type="button"
                     onClick={() => setSettingsOpen(true)}
@@ -80,6 +85,7 @@ export default function PhotoBoothPage() {
                     filterEffects={filterEffects}
                     disabled={!canCapture}
                     className="left-1/2 -translate-x-1/2"
+                    onBeforeCapture={showLivePreview}
                   />
                   <RetakePhoto
                     videoRef={videoRef}
@@ -88,6 +94,8 @@ export default function PhotoBoothPage() {
                     countdownSeconds={timerSeconds}
                     filterCss={filterCss}
                     filterEffects={filterEffects}
+                    onRetakeStart={showLivePreview}
+                    onRetakeComplete={showPhotoPreview}
                   />
                   <TimerOverlay />
                 </div>

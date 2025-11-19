@@ -12,3 +12,14 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <App />
   </BrowserRouter>
 );
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    const swPath = `${basename}service-worker.js`;
+    navigator.serviceWorker
+      .register(swPath)
+      .catch((error) =>
+        console.error("Service worker registration failed:", error),
+      );
+  });
+}
