@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { Eye } from "lucide-react";
 import PageLinks from "../components/PageLinks";
 import PhotoStrips from "../components/PhotoStrip.jsx";
 import FrameEditor from "../components/FrameEditor.jsx";
@@ -7,6 +8,7 @@ import TextEditor from "../components/TextEditor.jsx";
 import DownloadButton from "../components/Download.jsx";
 import ColorPicker from "../components/ColorPicker.jsx";
 import Blur from "../components/Blur.jsx";
+import StripPreviewModal from "../components/StripPreviewModal.jsx";
 import {
   FRAME_TYPES,
   FRAME_COLORS,
@@ -72,6 +74,7 @@ export default function PhotoEditPage() {
     FRAME_TEXT_COLORS[0].value
   );
   const [isTextColorPickerOpen, setTextColorPickerOpen] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [fontSize, setFontSize] = useState(16);
   const [fontWeight, setFontWeight] = useState(500);
   const [isItalic, setIsItalic] = useState(false);
@@ -212,10 +215,20 @@ export default function PhotoEditPage() {
         className="flex min-h-screen w-full flex-col items-center justify-center bg-repeat px-4 py-8"
         style={{ backgroundImage: `url(${pb3})` }}
       >
+        {/* Preview Button - Mobile Only */}
+        <button
+          type="button"
+          onClick={() => setIsPreviewOpen(true)}
+          className="fixed top-4 right-4 z-50 rounded-full bg-purple-500 p-3 text-white shadow-xl transition hover:bg-purple-600 hover:scale-110 lg:hidden"
+          aria-label="Preview photo strip"
+        >
+          <Eye className="h-5 w-5" />
+        </button>
+
         <Blur className="w-full max-w-6xl text-white" paddingClass="px-4 py-8 sm:px-6 lg:px-10">
           <div className="mx-auto flex w-full flex-col items-center gap-6 lg:flex-row lg:items-start lg:justify-center">
             {/* Photo Strip Preview */}
-            <div className="relative flex w-full flex-none items-center justify-center sm:max-w-[30rem] md:max-w-[40rem] lg:w-auto lg:max-w-none">
+            <div className="relative flex w-full flex-none items-center justify-center hidden lg:block lg:w-auto lg:max-w-none">
               <div
                 className="relative inline-block transition-all duration-300"
                 style={frameStyle}
@@ -335,6 +348,28 @@ export default function PhotoEditPage() {
           onClose={() => setTextColorPickerOpen(false)}
         />
       ) : null}
+
+      {/* Strip Preview Modal */}
+      <StripPreviewModal isOpen={isPreviewOpen} onClose={() => setIsPreviewOpen(false)}>
+        <div
+          className="relative inline-block transition-all duration-300"
+          style={frameStyle}
+        >
+          <PhotoStrips photos={photos} className="h-120 w-40 bg-transparent" />
+
+          {showTopText ? (
+            <div className="pointer-events-none absolute inset-x-1 top-1 flex justify-center px-1 text-center">
+              <span style={frameTextStyle}>{trimmedText}</span>
+            </div>
+          ) : null}
+
+          {showBottomText ? (
+            <div className="pointer-events-none absolute inset-x-1 bottom-2 flex justify-center px-1 text-center">
+              <span style={frameTextStyle}>{trimmedText}</span>
+            </div>
+          ) : null}
+        </div>
+      </StripPreviewModal>
     </>
   );
 }
