@@ -4,12 +4,28 @@ PhotoBooth is an in-browser photo booth experience built with React and Vite. It
 
 ## Features
 
-- Live mirrored camera preview with optional overlay filters and special effects.
-- Timer controls for hands-free captures and a configurable countdown overlay.
-- Photo strip layout showing the latest captures alongside a phone preview mockup.
-- Retake and re-order controls that keep blank slots available until all photos are filled.
-- Background artwork (pb1 on the landing page, pb3 inside the booth) that tiles to fill any viewport size.
-- Navigation links between Hero (`/`), Booth (`/booth`), and Editor (`/edit`) pages.
+### Photo Booth
+- **Live Camera Preview**: Mirrored camera feed with real-time filter application
+- **Custom Film Filters**: SVG-based color grading with adjustable exposure, contrast, vibrance, and tint
+- **Timer Controls**: Configurable countdown with visual overlay for hands-free captures
+- **Photo Strip Layout**: Classic 4-photo strip format with retake and reorder capabilities
+- **Filter Effects**: Grain, vignette, and warmth overlays for authentic film aesthetics
+
+### Frame Editor
+- **Frame Layouts**: Choose from classic, bottom-heavy, or top-heavy frame styles
+- **Adjustable Spacing**: Dynamic padding controls for custom frame sizing
+- **Color Palettes**: 11+ curated color schemes plus custom color picker
+- **Text Customization**: Add captions with 15+ font styles, adjustable size, weight, and color
+- **Live Preview**: Real-time frame and text rendering
+
+### Export & Download
+- **High-Quality Export**: Download photo strips as PNG with embedded frames and text
+- **Print-Ready**: Optimized dimensions for physical photo booth prints
+- **Instant Download**: Client-side image generation with html2canvas
+
+### Navigation
+- Seamless routing between Hero (`/`), Booth (`/booth`), and Editor (`/edit`) pages
+- Background artwork that adapts to any viewport size
 
 ## Tech Stack
 
@@ -17,6 +33,7 @@ PhotoBooth is an in-browser photo booth experience built with React and Vite. It
 - [Vite](https://vite.dev/) for bundling and dev server
 - [Tailwind CSS](https://tailwindcss.com/) for styling
 - [Lucide React](https://lucide.dev/) icon set
+- [html2canvas](https://html2canvas.hertzen.com/) for image export
 
 ## Getting Started
 
@@ -38,10 +55,25 @@ npm run preview
 
 ```
 src/
-├── assets/                # Static images such as pb1, pb2, pb3
-├── components/            # CameraView, PhonePreview, TakePhoto, etc.
-├── pages/                 # Hero, PhotoBoothPage, PhotoEditPage
-├── utils/                 # Camera/timer/filter helpers
+├── assets/                # Static images (pb1, pb2, pb3, pb4)
+├── components/            # Reusable UI components
+│   ├── CameraView.jsx     # Live camera preview
+│   ├── FrameEditor.jsx    # Frame customization controls
+│   ├── TextEditor.jsx     # Text styling controls
+│   ├── GlobalFilters.jsx  # SVG filter definitions
+│   ├── Download.jsx       # Export functionality
+│   └── ...
+├── pages/                 # Route pages
+│   ├── Hero.jsx           # Landing page
+│   ├── PhotoBoothPage.jsx # Camera & capture interface
+│   └── PhotoEditPage.jsx  # Frame & text editor
+├── utils/                 # Helper functions
+│   ├── cameraManager.js   # Camera stream handling
+│   ├── photoFilters.js    # Filter configurations
+│   ├── frameFilters.js    # Frame layout & color options
+│   ├── frameTextOptions.js # Font styles & colors
+│   ├── captureFrame.js    # Photo capture logic
+│   └── downloadPhoto.js   # Image export utilities
 ├── App.jsx                # Route definitions
 └── main.jsx               # Vite/React entry point
 ```
@@ -50,7 +82,9 @@ src/
 
 - **Styling:** Tailwind classes live in `src/index.css`. Add component-level styles via `@layer components`.
 - **Camera logic:** `src/utils/cameraManager.js` controls how streams are acquired and stopped; adjust permissions or constraints there.
-- **Filters:** Extend `src/utils/photoFilters.js` to add new CSS filters or overlay effects.
+- **Filters:** Extend `src/utils/photoFilters.js` to add new CSS filters or modify `src/components/GlobalFilters.jsx` for SVG-based color grading.
+- **Frame Colors:** Add new palettes in `src/utils/frameFilters.js` with custom background, border, and shadow values.
+- **Text Fonts:** Extend `src/utils/frameTextOptions.js` with Google Fonts or custom font families.
 - **Timer defaults:** Edit `src/utils/timerConfig.js` to change initial countdown durations.
 
 ## Development Notes
