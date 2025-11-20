@@ -3,11 +3,12 @@ import { useLocation } from "react-router-dom";
 import { Eye } from "lucide-react";
 import PageLinks from "../components/PageLinks";
 import PhotoStrips from "../components/PhotoStrip.jsx";
-import FrameEditor from "../components/FrameEditor.jsx";
-import TextEditor from "../components/TextEditor.jsx";
+import { FrameLayoutSection, FrameColorSection } from "../components/FrameEditor.jsx";
+import { TextContentSection, TextStyleSection } from "../components/TextEditor.jsx";
 import DownloadButton from "../components/Download.jsx";
 import ColorPicker from "../components/ColorPicker.jsx";
 import Blur from "../components/Blur.jsx";
+import PhotoEditDropDown, { PhotoEditDropDownItem } from "../components/PhotoEditDropDown.jsx";
 import StripPreviewModal from "../components/StripPreviewModal.jsx";
 import {
   FRAME_TYPES,
@@ -63,7 +64,7 @@ export default function PhotoEditPage() {
     FRAME_COLORS[0].backgroundColor
   );
   const [isFrameColorPickerOpen, setFrameColorPickerOpen] = useState(false);
-  const [frameText, setFrameText] = useState("");
+  const [frameText, setFrameText] = useState({ line1: "", line2: "", line3: "" });
   const [selectedTextStyle, setSelectedTextStyle] = useState(
     FRAME_TEXT_STYLES[0].id
   );
@@ -75,6 +76,7 @@ export default function PhotoEditPage() {
   );
   const [isTextColorPickerOpen, setTextColorPickerOpen] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("layout");
   const [fontSize, setFontSize] = useState(16);
   const [fontWeight, setFontWeight] = useState(500);
   const [isItalic, setIsItalic] = useState(false);
@@ -151,7 +153,13 @@ export default function PhotoEditPage() {
     return getFrameTextColor(selectedTextColor).value;
   }, [selectedTextColor, customTextColor]);
 
-  const trimmedUserText = frameText.trim();
+  const trimmedUserText = useMemo(() => {
+    const lines = [frameText.line1, frameText.line2, frameText.line3]
+      .map((line) => line?.trim())
+      .filter(Boolean);
+    return lines.join("\n");
+  }, [frameText]);
+
   const allowFrameText = selectedFrameType !== "classic-even";
   const displayText = allowFrameText ? trimmedUserText : "";
 
@@ -181,8 +189,10 @@ export default function PhotoEditPage() {
       display: "inline-block",
       paddingInline: "1px",
       boxSizing: "border-box",
-      lineHeight: 1.05,
+      lineHeight: 1.2,
       overflow: "visible",
+      whiteSpace: "pre-wrap",
+      textAlign: "center",
     };
   }, [
     selectedTextStyle,
@@ -219,10 +229,11 @@ export default function PhotoEditPage() {
         <button
           type="button"
           onClick={() => setIsPreviewOpen(true)}
-          className="fixed top-4 right-4 z-50 rounded-full bg-purple-500 p-3 text-white shadow-xl transition hover:bg-purple-600 hover:scale-110 lg:hidden"
+          className="fixed top-4 right-4 z-50 flex items-center rounded-full bg-purple-500 px-4 py-2 text-white shadow-xl transition hover:bg-purple-600 hover:scale-105 lg:hidden"
           aria-label="Preview photo strip"
         >
           <Eye className="h-5 w-5" />
+          <span className="ml-2 font-semibold">Preview</span>
         </button>
 
         <Blur className="w-full max-w-6xl text-white" paddingClass="px-4 py-8 sm:px-6 lg:px-10">
@@ -266,38 +277,72 @@ export default function PhotoEditPage() {
                 </div>
 
                 <div className="space-y-6">
-                  <FrameEditor
-                    selectedFrameType={selectedFrameType}
-                    onFrameTypeChange={setSelectedFrameType}
-                    topAdjust={topAdjust}
-                    onTopAdjustChange={setTopAdjust}
-                    bottomAdjust={bottomAdjust}
-                    onBottomAdjustChange={setBottomAdjust}
-                    selectedFrameColor={selectedFrameColor}
-                    onFrameColorChange={setSelectedFrameColor}
-                    customFrameColor={customFrameColor}
-                    onCustomFrameColorClick={() => setFrameColorPickerOpen(true)}
-                  />
+                  <PhotoEditDropDown>
+                    <PhotoEditDropDownItem
+                      title="Frame Layout"
+                      isOpen={activeSection === "layout"}
+                      onToggle={() => setActiveSection(activeSection === "layout" ? null : "layout")}
+                    >
+                      <FrameLayoutSection
+                        selectedFrameType={selectedFrameType}
+                        onFrameTypeChange={setSelectedFrameType}
+                        topAdjust={topAdjust}
+                        onTopAdjustChange={setTopAdjust}
+                        bottomAdjust={bottomAdjust}
+                        onBottomAdjustChange={setBottomAdjust}
+                      />
+                    </PhotoEditDropDownItem>
 
-                  {allowFrameText ? (
-                    <TextEditor
-                      frameText={frameText}
-                      onFrameTextChange={setFrameText}
-                      selectedTextStyle={selectedTextStyle}
-                      onTextStyleChange={setSelectedTextStyle}
-                      selectedTextColor={selectedTextColor}
-                      onTextColorChange={setSelectedTextColor}
-                      customTextColor={customTextColor}
-                      onCustomTextColorClick={() => setTextColorPickerOpen(true)}
-                      fontSize={fontSize}
-                      onFontSizeChange={setFontSize}
-                      fontSliderMax={fontSliderMax}
-                      fontWeight={fontWeight}
-                      onFontWeightChange={setFontWeight}
-                      isItalic={isItalic}
-                      onItalicToggle={setIsItalic}
-                    />
-                  ) : null}
+                    <PhotoEditDropDownItem
+                      title="Frame Colors"
+                      isOpen={activeSection === "colors"}
+                      onToggle={() => setActiveSection(activeSection === "colors" ? null : "colors")}
+                    >
+                      <FrameColorSection
+                        selectedFrameColor={selectedFrameColor}
+                        onFrameColorChange={setSelectedFrameColor}
+                        customFrameColor={customFrameColor}
+                        onCustomFrameColorClick={() => setFrameColorPickerOpen(true)}
+                      />
+                    </PhotoEditDropDownItem>
+
+                    {allowFrameText && (
+                      <>
+                        <PhotoEditDropDownItem
+                          title="Text Content"
+                          isOpen={activeSection === "textContent"}
+                          onToggle={() => setActiveSection(activeSection === "textContent" ? null : "textContent")}
+                        >
+                          <TextContentSection
+                            frameText={frameText}
+                            onFrameTextChange={setFrameText}
+                            selectedTextStyle={selectedTextStyle}
+                            onTextStyleChange={setSelectedTextStyle}
+                          />
+                        </PhotoEditDropDownItem>
+
+                        <PhotoEditDropDownItem
+                          title="Text Style"
+                          isOpen={activeSection === "textStyle"}
+                          onToggle={() => setActiveSection(activeSection === "textStyle" ? null : "textStyle")}
+                        >
+                          <TextStyleSection
+                            selectedTextColor={selectedTextColor}
+                            onTextColorChange={setSelectedTextColor}
+                            customTextColor={customTextColor}
+                            onCustomTextColorClick={() => setTextColorPickerOpen(true)}
+                            fontSize={fontSize}
+                            onFontSizeChange={setFontSize}
+                            fontSliderMax={fontSliderMax}
+                            fontWeight={fontWeight}
+                            onFontWeightChange={setFontWeight}
+                            isItalic={isItalic}
+                            onItalicToggle={setIsItalic}
+                          />
+                        </PhotoEditDropDownItem>
+                      </>
+                    )}
+                  </PhotoEditDropDown>
                 </div>
               </div>
 

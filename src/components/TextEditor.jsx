@@ -6,41 +6,44 @@ import {
   FRAME_TEXT_COLORS,
 } from "../utils/frameTextOptions.js";
 
-export default function TextEditor({
+export function TextContentSection({
   frameText,
   onFrameTextChange,
   selectedTextStyle,
   onTextStyleChange,
-  selectedTextColor,
-  onTextColorChange,
-  customTextColor = "#ffffff",
-  onCustomTextColorClick,
-  fontSize,
-  onFontSizeChange,
-  fontSliderMax,
-  fontWeight,
-  onFontWeightChange,
-  isItalic,
-  onItalicToggle,
-  className = "",
 }) {
-  return (
-    <div className={`space-y-4 ${className}`}>
-      <div className="flex items-center justify-between">
-        <h2 className="text-base font-semibold text-slate-700">Frame Text</h2>
-        <span className="text-xs text-slate-400">
-          Placement matches the chosen frame layout
-        </span>
-      </div>
+  const handleChange = (key, value) => {
+    onFrameTextChange?.({ ...frameText, [key]: value });
+  };
 
-      <input
-        type="text"
-        maxLength={40}
-        value={frameText}
-        onChange={(event) => onFrameTextChange?.(event.target.value)}
-        placeholder="Type an optional booth caption…"
-        className="w-full rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-700 shadow-sm placeholder:text-slate-400 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200"
-      />
+  return (
+    <div className="space-y-4">
+      <div className="space-y-2">
+        <input
+          type="text"
+          maxLength={40}
+          value={frameText.line1 || ""}
+          onChange={(event) => handleChange("line1", event.target.value)}
+          placeholder="Line 1"
+          className="w-full rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-700 shadow-sm placeholder:text-slate-400 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200"
+        />
+        <input
+          type="text"
+          maxLength={40}
+          value={frameText.line2 || ""}
+          onChange={(event) => handleChange("line2", event.target.value)}
+          placeholder="Line 2 (optional)"
+          className="w-full rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-700 shadow-sm placeholder:text-slate-400 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200"
+        />
+        <input
+          type="text"
+          maxLength={40}
+          value={frameText.line3 || ""}
+          onChange={(event) => handleChange("line3", event.target.value)}
+          placeholder="Line 3 (optional)"
+          className="w-full rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-700 shadow-sm placeholder:text-slate-400 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200"
+        />
+      </div>
 
       <CustomDropDown
         label="Font Styles"
@@ -72,13 +75,30 @@ export default function TextEditor({
             text={style.sample}
             fontFamily={style.fontFamily}
             styleOverrides={style.styleOverrides}
-            className={`${
-              isActive ? "border-purple-400 bg-purple-50" : ""
-            }`}
+            className={`${isActive ? "border-purple-400 bg-purple-50" : ""
+              }`}
           />
         )}
       />
+    </div>
+  );
+}
 
+export function TextStyleSection({
+  selectedTextColor,
+  onTextColorChange,
+  customTextColor = "#ffffff",
+  onCustomTextColorClick,
+  fontSize,
+  onFontSizeChange,
+  fontSliderMax,
+  fontWeight,
+  onFontWeightChange,
+  isItalic,
+  onItalicToggle,
+}) {
+  return (
+    <div className="space-y-4">
       <div className="space-y-3">
         <p className="text-sm font-medium text-slate-600">Text Colour</p>
         <div className="grid grid-cols-3 gap-4">
@@ -89,16 +109,14 @@ export default function TextEditor({
                 key={color.id}
                 type="button"
                 onClick={() => onTextColorChange?.(color.id)}
-                className={`flex flex-col items-start text-left text-xs font-medium ${
-                  isActive ? "text-slate-900" : "text-slate-500"
-                }`}
+                className={`flex flex-col items-start text-left text-xs font-medium ${isActive ? "text-slate-900" : "text-slate-500"
+                  }`}
               >
                 <span
-                  className={`flex h-10 w-10 items-center justify-center rounded-full border-2 transition ${
-                    isActive
-                      ? "border-purple-500 ring-2 ring-purple-200"
-                      : "border-transparent"
-                  }`}
+                  className={`flex h-10 w-10 items-center justify-center rounded-full border-2 transition ${isActive
+                    ? "border-purple-500 ring-2 ring-purple-200"
+                    : "border-transparent"
+                    }`}
                   style={{ backgroundColor: color.value }}
                 />
                 {color.label}
@@ -112,26 +130,23 @@ export default function TextEditor({
               onTextColorChange?.("custom");
               onCustomTextColorClick?.();
             }}
-            className={`flex flex-col items-start text-left text-xs font-medium ${
-              selectedTextColor === "custom"
-                ? "text-slate-900"
-                : "text-slate-500"
-            }`}
+            className={`flex flex-col items-start text-left text-xs font-medium ${selectedTextColor === "custom"
+              ? "text-slate-900"
+              : "text-slate-500"
+              }`}
           >
             <span
-              className={`flex h-10 w-10 items-center justify-center rounded-full border-2 transition ${
-                selectedTextColor === "custom"
-                  ? "border-purple-500 ring-2 ring-purple-200"
-                  : "border-dashed border-slate-300"
-              }`}
+              className={`flex h-10 w-10 items-center justify-center rounded-full border-2 transition ${selectedTextColor === "custom"
+                ? "border-purple-500 ring-2 ring-purple-200"
+                : "border-dashed border-slate-300"
+                }`}
               style={{ backgroundColor: customTextColor }}
             >
               <Plus
-                className={`h-5 w-5 ${
-                  selectedTextColor === "custom"
-                    ? "text-white drop-shadow"
-                    : "text-slate-600"
-                }`}
+                className={`h-5 w-5 ${selectedTextColor === "custom"
+                  ? "text-white drop-shadow"
+                  : "text-slate-600"
+                  }`}
               />
             </span>
             Custom
@@ -176,11 +191,10 @@ export default function TextEditor({
           onClick={() =>
             onFontWeightChange?.((weight) => (weight >= 700 ? 500 : 700))
           }
-          className={`rounded-full px-4 py-2 text-sm font-semibold ${
-            fontWeight >= 700
-              ? "bg-purple-600 text-white"
-              : "bg-slate-200 text-slate-700"
-          }`}
+          className={`rounded-full px-4 py-2 text-sm font-semibold ${fontWeight >= 700
+            ? "bg-purple-600 text-white"
+            : "bg-slate-200 text-slate-700"
+            }`}
         >
           Bold Toggle
         </button>
@@ -188,13 +202,21 @@ export default function TextEditor({
         <button
           type="button"
           onClick={() => onItalicToggle?.((prev) => !prev)}
-          className={`rounded-full px-4 py-2 text-sm font-semibold ${
-            isItalic ? "bg-purple-600 text-white" : "bg-slate-200 text-slate-700"
-          }`}
+          className={`rounded-full px-4 py-2 text-sm font-semibold ${isItalic ? "bg-purple-600 text-white" : "bg-slate-200 text-slate-700"
+            }`}
         >
           Italic Toggle
         </button>
       </div>
+    </div>
+  );
+}
+
+export default function TextEditor(props) {
+  return (
+    <div className={`space-y-6 ${props.className || ""}`}>
+      <TextContentSection {...props} />
+      <TextStyleSection {...props} />
     </div>
   );
 }
