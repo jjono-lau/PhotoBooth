@@ -1,41 +1,42 @@
 # PhotoBooth
 
-PhotoBooth is an in-browser photo booth experience built with React and Vite. It provides a fun hero landing page, a full-featured booth with live camera preview, filter controls, countdown timers, and printable photo strips, plus a photo editor route for post-shot tweaks.
+PhotoBooth is a modern, in-browser photo booth experience built with React and Vite. It delivers a premium user journey from a vibrant landing page to a fully-featured capture booth and a sophisticated post-processing editor.
 
-## Features
+## ✨ Features
 
-### Photo Booth
-- **Live Camera Preview**: Mirrored camera feed with real-time filter application
-- **Custom Film Filters**: SVG-based color grading with adjustable exposure, contrast, vibrance, and tint
-- **Timer Controls**: Configurable countdown with visual overlay for hands-free captures
-- **Photo Strip Layout**: Classic 4-photo strip format with retake and reorder capabilities
-- **Filter Effects**: Grain, vignette, and warmth overlays for authentic film aesthetics
+### 📸 Photo Booth
+- **Live Camera Preview**: High-performance mirrored camera feed with real-time filter application.
+- **Custom Film Simulation**: Advanced SVG-based color grading engine that replicates authentic film aesthetics (exposure, contrast, vibrance, tint).
+- **Smart Timer**: Configurable countdown with visual overlay for hands-free captures.
+- **Classic Strip Layout**: Automatically arranges 4 photos into a nostalgic vertical strip format.
+- **Filter Effects**: Real-time grain, vignette, and warmth overlays.
 
-### Frame Editor
-- **Frame Layouts**: Choose from classic, bottom-heavy, or top-heavy frame styles
-- **Adjustable Spacing**: Dynamic padding controls for custom frame sizing
-- **Color Palettes**: 11+ curated color schemes plus custom color picker
-- **Text Customization**: Add captions with 15+ font styles, adjustable size, weight, and color
-- **Live Preview**: Real-time frame and text rendering
+### 🎨 Creative Editor
+- **Accordion-Style Interface**: Clean, collapsible "Photo Edit Dropdown" UI for a clutter-free editing experience.
+- **Frame Customization**:
+  - **Layouts**: Classic, bottom-heavy, or top-heavy styles.
+  - **Spacing**: Fine-tune padding and borders.
+  - **Colors**: 11+ curated palettes plus a custom color picker.
+- **Advanced Typography**:
+  - **Multi-line Support**: Add up to 3 lines of text for storytelling captions.
+  - **Styling**: 15+ font families, adjustable weight, size, and italics.
+  - **Colors**: Curated text colors or custom hex selection.
+- **Mobile-First Preview**: Dedicated "Eye" button for mobile users to preview their strip in a distraction-free modal.
 
-### Export & Download
-- **High-Quality Export**: Download photo strips as PNG with embedded frames and text
-- **Print-Ready**: Optimized dimensions for physical photo booth prints
-- **Instant Download**: Client-side image generation with html2canvas
+### 💾 Export & Share
+- **High-Res Download**: Generates high-quality PNGs with all frames, text, and filters embedded.
+- **Print Optimization**: Dimensions tuned for standard photo strip printing.
+- **Client-Side Generation**: Fast and secure image creation using `html2canvas`.
 
-### Navigation
-- Seamless routing between Hero (`/`), Booth (`/booth`), and Editor (`/edit`) pages
-- Background artwork that adapts to any viewport size
+## 🛠️ Tech Stack
 
-## Tech Stack
+- **Framework**: [React](https://react.dev/) + [React Router](https://reactrouter.com/)
+- **Build Tool**: [Vite](https://vite.dev/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Export**: [html2canvas](https://html2canvas.hertzen.com/)
 
-- [React](https://react.dev/) + [React Router](https://reactrouter.com/)
-- [Vite](https://vite.dev/) for bundling and dev server
-- [Tailwind CSS](https://tailwindcss.com/) for styling
-- [Lucide React](https://lucide.dev/) icon set
-- [html2canvas](https://html2canvas.hertzen.com/) for image export
-
-## Getting Started
+## 🚀 Getting Started
 
 ```bash
 # Install dependencies
@@ -51,45 +52,46 @@ npm run build
 npm run preview
 ```
 
-## Project Structure
+## 📂 Project Structure
 
 ```
 src/
-├── assets/                # Static images (pb1, pb2, pb3, pb4)
-├── components/            # Reusable UI components
-│   ├── CameraView.jsx     # Live camera preview
-│   ├── FrameEditor.jsx    # Frame customization controls
-│   ├── TextEditor.jsx     # Text styling controls
-│   ├── GlobalFilters.jsx  # SVG filter definitions
-│   ├── Download.jsx       # Export functionality
+├── assets/                  # Static images and background assets
+├── components/              # Reusable UI components
+│   ├── CameraView.jsx       # Live camera preview wrapper
+│   ├── FrameEditor.jsx      # Frame layout & color controls
+│   ├── TextEditor.jsx       # Text content & style controls
+│   ├── PhotoEditDropDown.jsx # Collapsible UI container
+│   ├── StripPreviewModal.jsx # Mobile-optimized preview modal
+│   ├── GlobalFilters.jsx    # SVG filter definitions
 │   └── ...
-├── pages/                 # Route pages
-│   ├── Hero.jsx           # Landing page
-│   ├── PhotoBoothPage.jsx # Camera & capture interface
-│   └── PhotoEditPage.jsx  # Frame & text editor
-├── utils/                 # Helper functions
-│   ├── cameraManager.js   # Camera stream handling
-│   ├── photoFilters.js    # Filter configurations
-│   ├── frameFilters.js    # Frame layout & color options
-│   ├── frameTextOptions.js # Font styles & colors
-│   ├── captureFrame.js    # Photo capture logic
-│   └── downloadPhoto.js   # Image export utilities
-├── App.jsx                # Route definitions
-└── main.jsx               # Vite/React entry point
+├── pages/                   # Application routes
+│   ├── Hero.jsx             # Landing page
+│   ├── PhotoBoothPage.jsx   # Capture interface
+│   └── PhotoEditPage.jsx    # Post-processing editor
+├── utils/                   # Logic & Configuration
+│   ├── cameraManager.js     # MediaStream handling
+│   ├── photoFilters.js      # CSS & SVG filter configs
+│   ├── frameFilters.js      # Frame presets
+│   ├── frameTextOptions.js  # Font & color presets
+│   └── ...
+├── App.jsx                  # Route configuration
+└── main.jsx                 # Entry point
 ```
 
-## Customization Tips
+## 🎨 Customization Guide
 
-- **Styling:** Tailwind classes live in `src/index.css`. Add component-level styles via `@layer components`.
-- **Camera logic:** `src/utils/cameraManager.js` controls how streams are acquired and stopped; adjust permissions or constraints there.
-- **Filters:** Extend `src/utils/photoFilters.js` to add new CSS filters or modify `src/components/GlobalFilters.jsx` for SVG-based color grading.
-- **Frame Colors:** Add new palettes in `src/utils/frameFilters.js` with custom background, border, and shadow values.
-- **Text Fonts:** Extend `src/utils/frameTextOptions.js` with Google Fonts or custom font families.
-- **Timer defaults:** Edit `src/utils/timerConfig.js` to change initial countdown durations.
+- **Filters**: Modify `src/utils/photoFilters.js` to tweak the film simulation values (exposure, contrast, etc.).
+- **Fonts**: Add new Google Fonts in `index.html` and register them in `src/utils/frameTextOptions.js`.
+- **Colors**: Extend the palette in `src/utils/frameFilters.js` to add new frame color combinations.
+- **Layouts**: Adjust frame padding logic in `src/utils/frameFilters.js` to create new strip layouts.
 
-## Development Notes
+## 📝 Development Notes
 
-- The project assumes secure origins (HTTPS or localhost) for camera access.
-- If you change background assets, import them inside the relevant page component and update the `backgroundImage` inline style.
+- **Camera Access**: Requires a secure context (HTTPS or localhost).
+- **Performance**: SVG filters are optimized for real-time use but complex chains may impact low-end devices.
+- **Responsiveness**: The UI is fully responsive, with specific optimizations for mobile editing (e.g., the preview modal).
+
+---
 
 Happy snapping! 🎞️
