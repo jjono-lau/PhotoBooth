@@ -108,18 +108,18 @@ export default function PhotoBoothPage() {
           </div>
 
           <div className="mx-auto mt-8 flex w-full flex-col items-center gap-4 lg:flex-row lg:items-stretch lg:justify-center lg:gap-6">
-            <PageLinks
+            {/* <PageLinks
               to="/"
               variant="blue"
               className="w-full flex-none px-4 py-2 text-center font-semibold sm:max-w-[30rem] md:max-w-[40rem] lg:w-150 lg:max-w-none"
             >
               Go to Home Page
-            </PageLinks>
+            </PageLinks> */}
 
             <PageLinks
               to="/edit"
               variant="red"
-              className="w-full flex-none px-4 py-2 text-center font-semibold sm:max-w-[30rem] md:max-w-[40rem] lg:w-40 lg:max-w-none"
+              className="w-full flex-none px-4 py-2 text-center font-semibold sm:max-w-[30rem] md:max-w-[40rem] lg:w-[49rem] lg:max-w-none"
               state={{ photos }}
             >
               Go to Photo Editor

@@ -4,6 +4,8 @@ import downloadPhoto from "../utils/downloadPhoto";
 
 export default function DownloadButton({
   targetRef,
+  resolveTarget,
+  onAfterDownload,
   className = "",
   filename = "photo-strip.png",
   qualityScale = 4,
@@ -11,19 +13,26 @@ export default function DownloadButton({
   const [isDownloading, setIsDownloading] = useState(false);
 
   const handleDownload = useCallback(async () => {
-    if (!targetRef?.current || isDownloading) return;
+    if (isDownloading) return;
 
     setIsDownloading(true);
     try {
-      await downloadPhoto(targetRef.current, { filename, scale: qualityScale });
+      const targetNode = resolveTarget
+        ? await resolveTarget()
+        : targetRef?.current;
+
+      if (!targetNode) return;
+
+      await downloadPhoto(targetNode, { filename, scale: qualityScale });
+      if (onAfterDownload) onAfterDownload();
     } catch {
       // Already logged inside util; silently fail to keep UI simple.
     } finally {
       setIsDownloading(false);
     }
-  }, [targetRef, filename, qualityScale, isDownloading]);
+  }, [resolveTarget, targetRef, filename, qualityScale, isDownloading, onAfterDownload]);
 
-  const isDisabled = isDownloading || !targetRef?.current;
+  const isDisabled = isDownloading;
 
   return (
     <button

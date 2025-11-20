@@ -1,14 +1,22 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Eye } from "lucide-react";
 import PageLinks from "../components/PageLinks";
 import PhotoStrips from "../components/PhotoStrip.jsx";
-import { FrameLayoutSection, FrameColorSection } from "../components/FrameEditor.jsx";
-import { TextContentSection, TextStyleSection } from "../components/TextEditor.jsx";
+import {
+  FrameLayoutSection,
+  FrameColorSection,
+} from "../components/FrameEditor.jsx";
+import {
+  TextContentSection,
+  TextStyleSection,
+} from "../components/TextEditor.jsx";
 import DownloadButton from "../components/Download.jsx";
 import ColorPicker from "../components/ColorPicker.jsx";
 import Blur from "../components/Blur.jsx";
-import PhotoEditDropDown, { PhotoEditDropDownItem } from "../components/PhotoEditDropDown.jsx";
+import PhotoEditDropDown, {
+  PhotoEditDropDownItem,
+} from "../components/PhotoEditDropDown.jsx";
 import StripPreviewModal from "../components/StripPreviewModal.jsx";
 import {
   FRAME_TYPES,
@@ -50,6 +58,7 @@ function hexToRgba(hex, alpha = 1) {
 export default function PhotoEditPage() {
   const location = useLocation();
   const framePreviewRef = useRef(null);
+  const previewStripRef = useRef(null);
   const photos = useMemo(() => {
     if (Array.isArray(location.state?.photos)) {
       return location.state.photos;
@@ -64,7 +73,11 @@ export default function PhotoEditPage() {
     FRAME_COLORS[0].backgroundColor
   );
   const [isFrameColorPickerOpen, setFrameColorPickerOpen] = useState(false);
-  const [frameText, setFrameText] = useState({ line1: "", line2: "", line3: "" });
+  const [frameText, setFrameText] = useState({
+    line1: "",
+    line2: "",
+    line3: "",
+  });
   const [selectedTextStyle, setSelectedTextStyle] = useState(
     FRAME_TEXT_STYLES[0].id
   );
@@ -219,6 +232,46 @@ export default function PhotoEditPage() {
     setSelectedTextColor("custom");
   };
 
+  const resolveDownloadTarget = useCallback(async () => {
+    const isDesktop = window.innerWidth >= 1024;
+    if (isDesktop) {
+      return framePreviewRef.current;
+    }
+
+    if (!isPreviewOpen) {
+      setIsPreviewOpen(true);
+      // allow modal to render before capture
+      await new Promise((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(resolve))
+      );
+    }
+
+    return previewStripRef.current || framePreviewRef.current;
+  }, [isPreviewOpen]);
+
+  const renderStripPreview = (ref, className = "", ariaHidden = false) => (
+    <div
+      className={`relative inline-block transition-all duration-300 ${className}`}
+      style={frameStyle}
+      ref={ref || undefined}
+      aria-hidden={ariaHidden}
+    >
+      <PhotoStrips photos={photos} className="h-120 w-40 bg-transparent" />
+
+      {showTopText ? (
+        <div className="pointer-events-none absolute inset-x-1 top-1 flex justify-center px-1 text-center">
+          <span style={frameTextStyle}>{trimmedText}</span>
+        </div>
+      ) : null}
+
+      {showBottomText ? (
+        <div className="pointer-events-none absolute inset-x-1 bottom-2 flex justify-center px-1 text-center">
+          <span style={frameTextStyle}>{trimmedText}</span>
+        </div>
+      ) : null}
+    </div>
+  );
+
   return (
     <>
       <div
@@ -236,29 +289,14 @@ export default function PhotoEditPage() {
           <span className="ml-2 font-semibold">Preview</span>
         </button>
 
-        <Blur className="w-full max-w-6xl text-white" paddingClass="px-4 py-8 sm:px-6 lg:px-10">
+        <Blur
+          className="w-full max-w-6xl text-white"
+          paddingClass="px-4 py-8 sm:px-6 lg:px-10"
+        >
           <div className="mx-auto flex w-full flex-col items-center gap-6 lg:flex-row lg:items-start lg:justify-center">
             {/* Photo Strip Preview */}
             <div className="relative flex w-full flex-none items-center justify-center hidden lg:block lg:w-auto lg:max-w-none">
-              <div
-                className="relative inline-block transition-all duration-300"
-                style={frameStyle}
-                ref={framePreviewRef}
-              >
-                <PhotoStrips photos={photos} className="h-120 w-40 bg-transparent" />
-
-                {showTopText ? (
-                  <div className="pointer-events-none absolute inset-x-1 top-1 flex justify-center px-1 text-center">
-                    <span style={frameTextStyle}>{trimmedText}</span>
-                  </div>
-                ) : null}
-
-                {showBottomText ? (
-                  <div className="pointer-events-none absolute inset-x-1 bottom-2 flex justify-center px-1 text-center">
-                    <span style={frameTextStyle}>{trimmedText}</span>
-                  </div>
-                ) : null}
-              </div>
+              {renderStripPreview(framePreviewRef)}
             </div>
 
             {/* Editor Controls */}
@@ -272,7 +310,8 @@ export default function PhotoEditPage() {
                     Customize your strip
                   </h1>
                   <p className="mt-2 text-sm text-slate-600">
-                    Pick a photo booth frame color and add custom text to your strip.
+                    Pick a photo booth frame color and add custom text to your
+                    strip.
                   </p>
                 </div>
 
@@ -281,7 +320,11 @@ export default function PhotoEditPage() {
                     <PhotoEditDropDownItem
                       title="Frame Layout"
                       isOpen={activeSection === "layout"}
-                      onToggle={() => setActiveSection(activeSection === "layout" ? null : "layout")}
+                      onToggle={() =>
+                        setActiveSection(
+                          activeSection === "layout" ? null : "layout"
+                        )
+                      }
                     >
                       <FrameLayoutSection
                         selectedFrameType={selectedFrameType}
@@ -296,13 +339,19 @@ export default function PhotoEditPage() {
                     <PhotoEditDropDownItem
                       title="Frame Colors"
                       isOpen={activeSection === "colors"}
-                      onToggle={() => setActiveSection(activeSection === "colors" ? null : "colors")}
+                      onToggle={() =>
+                        setActiveSection(
+                          activeSection === "colors" ? null : "colors"
+                        )
+                      }
                     >
                       <FrameColorSection
                         selectedFrameColor={selectedFrameColor}
                         onFrameColorChange={setSelectedFrameColor}
                         customFrameColor={customFrameColor}
-                        onCustomFrameColorClick={() => setFrameColorPickerOpen(true)}
+                        onCustomFrameColorClick={() =>
+                          setFrameColorPickerOpen(true)
+                        }
                       />
                     </PhotoEditDropDownItem>
 
@@ -311,7 +360,13 @@ export default function PhotoEditPage() {
                         <PhotoEditDropDownItem
                           title="Text Content"
                           isOpen={activeSection === "textContent"}
-                          onToggle={() => setActiveSection(activeSection === "textContent" ? null : "textContent")}
+                          onToggle={() =>
+                            setActiveSection(
+                              activeSection === "textContent"
+                                ? null
+                                : "textContent"
+                            )
+                          }
                         >
                           <TextContentSection
                             frameText={frameText}
@@ -324,13 +379,19 @@ export default function PhotoEditPage() {
                         <PhotoEditDropDownItem
                           title="Text Style"
                           isOpen={activeSection === "textStyle"}
-                          onToggle={() => setActiveSection(activeSection === "textStyle" ? null : "textStyle")}
+                          onToggle={() =>
+                            setActiveSection(
+                              activeSection === "textStyle" ? null : "textStyle"
+                            )
+                          }
                         >
                           <TextStyleSection
                             selectedTextColor={selectedTextColor}
                             onTextColorChange={setSelectedTextColor}
                             customTextColor={customTextColor}
-                            onCustomTextColorClick={() => setTextColorPickerOpen(true)}
+                            onCustomTextColorClick={() =>
+                              setTextColorPickerOpen(true)
+                            }
                             fontSize={fontSize}
                             onFontSizeChange={setFontSize}
                             fontSliderMax={fontSliderMax}
@@ -348,14 +409,13 @@ export default function PhotoEditPage() {
 
               {/* Action Buttons */}
               <div className="flex w-full flex-col gap-4 sm:flex-row">
-                <PageLinks
-                  to="/"
-                  variant="blue"
-                  className="flex-1 px-4 py-2 text-center font-semibold"
-                >
-                  Home
-                </PageLinks>
-
+                <DownloadButton
+                  targetRef={framePreviewRef}
+                  resolveTarget={resolveDownloadTarget}
+                  onAfterDownload={() => setIsPreviewOpen(false)}
+                  className="flex-1 px-4 py-2"
+                />
+                
                 <PageLinks
                   to="/booth"
                   variant="red"
@@ -364,10 +424,13 @@ export default function PhotoEditPage() {
                   New Photo
                 </PageLinks>
 
-                <DownloadButton
-                  targetRef={framePreviewRef}
-                  className="flex-1 px-4 py-2"
-                />
+                <PageLinks
+                  to="/"
+                  variant="blue"
+                  className="flex-1 px-4 py-2 text-center font-semibold"
+                >
+                  Home
+                </PageLinks>
               </div>
             </div>
           </div>
@@ -395,25 +458,11 @@ export default function PhotoEditPage() {
       ) : null}
 
       {/* Strip Preview Modal */}
-      <StripPreviewModal isOpen={isPreviewOpen} onClose={() => setIsPreviewOpen(false)}>
-        <div
-          className="relative inline-block transition-all duration-300"
-          style={frameStyle}
-        >
-          <PhotoStrips photos={photos} className="h-120 w-40 bg-transparent" />
-
-          {showTopText ? (
-            <div className="pointer-events-none absolute inset-x-1 top-1 flex justify-center px-1 text-center">
-              <span style={frameTextStyle}>{trimmedText}</span>
-            </div>
-          ) : null}
-
-          {showBottomText ? (
-            <div className="pointer-events-none absolute inset-x-1 bottom-2 flex justify-center px-1 text-center">
-              <span style={frameTextStyle}>{trimmedText}</span>
-            </div>
-          ) : null}
-        </div>
+      <StripPreviewModal
+        isOpen={isPreviewOpen}
+        onClose={() => setIsPreviewOpen(false)}
+      >
+        {renderStripPreview(previewStripRef)}
       </StripPreviewModal>
     </>
   );
