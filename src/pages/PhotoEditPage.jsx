@@ -6,6 +6,7 @@ import FrameEditor from "../components/FrameEditor.jsx";
 import TextEditor from "../components/TextEditor.jsx";
 import DownloadButton from "../components/Download.jsx";
 import ColorPicker from "../components/ColorPicker.jsx";
+import Blur from "../components/Blur.jsx";
 import {
   FRAME_TYPES,
   FRAME_COLORS,
@@ -19,6 +20,7 @@ import {
   getFrameTextColor,
 } from "../utils/frameTextOptions.js";
 import { createPhotoSlots } from "../utils/photoCounter.js";
+import pb3 from "../assets/pb3.png";
 
 const DEFAULT_SHADOW = "0 18px 44px rgba(15, 23, 42, 0.25)";
 
@@ -205,91 +207,115 @@ export default function PhotoEditPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 px-4 py-10">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 lg:flex-row">
-        <section className="flex-1 space-y-6">
-          <div>
-            <p className="text-sm uppercase tracking-[0.2em] text-slate-400">
-              Edit
-            </p>
-            <h1 className="text-4xl font-semibold text-slate-800">
-              Customize your strip
-            </h1>
-            <p className="mt-2 text-sm text-slate-500">
-              Pick a photo booth frame color and we will apply it to your
-              captured strip.
-            </p>
-          </div>
+    <>
+      <div
+        className="flex min-h-screen w-full flex-col items-center justify-center bg-repeat px-4 py-8"
+        style={{ backgroundImage: `url(${pb3})` }}
+      >
+        <Blur className="w-full max-w-6xl text-white" paddingClass="px-4 py-8 sm:px-6 lg:px-10">
+          <div className="mx-auto flex w-full flex-col items-center gap-6 lg:flex-row lg:items-start lg:justify-center">
+            {/* Photo Strip Preview */}
+            <div className="relative flex w-full flex-none items-center justify-center sm:max-w-[30rem] md:max-w-[40rem] lg:w-auto lg:max-w-none">
+              <div
+                className="relative inline-block transition-all duration-300"
+                style={frameStyle}
+                ref={framePreviewRef}
+              >
+                <PhotoStrips photos={photos} className="h-120 w-40 bg-transparent" />
 
-          <FrameEditor
-            selectedFrameType={selectedFrameType}
-            onFrameTypeChange={setSelectedFrameType}
-            topAdjust={topAdjust}
-            onTopAdjustChange={setTopAdjust}
-            bottomAdjust={bottomAdjust}
-            onBottomAdjustChange={setBottomAdjust}
-            selectedFrameColor={selectedFrameColor}
-            onFrameColorChange={setSelectedFrameColor}
-            customFrameColor={customFrameColor}
-            onCustomFrameColorClick={() => setFrameColorPickerOpen(true)}
-          />
+                {showTopText ? (
+                  <div className="pointer-events-none absolute inset-x-1 top-1 flex justify-center px-1 text-center">
+                    <span style={frameTextStyle}>{trimmedText}</span>
+                  </div>
+                ) : null}
 
-          {allowFrameText ? (
-            <TextEditor
-              frameText={frameText}
-              onFrameTextChange={setFrameText}
-              selectedTextStyle={selectedTextStyle}
-              onTextStyleChange={setSelectedTextStyle}
-              selectedTextColor={selectedTextColor}
-              onTextColorChange={setSelectedTextColor}
-              customTextColor={customTextColor}
-              onCustomTextColorClick={() => setTextColorPickerOpen(true)}
-              fontSize={fontSize}
-              onFontSizeChange={setFontSize}
-              fontSliderMax={fontSliderMax}
-              fontWeight={fontWeight}
-              onFontWeightChange={setFontWeight}
-              isItalic={isItalic}
-              onItalicToggle={setIsItalic}
-            />
-          ) : null}
-
-          <div className="flex flex-wrap gap-4">
-            <PageLinks to="/" variant="blue" className="px-6 py-3 font-semibold">
-              Home
-            </PageLinks>
-            <PageLinks to="/booth" variant="red" className="px-6 py-3 font-semibold">
-              Back to Booth
-            </PageLinks>
-            <PageLinks to="/edit" variant="purple" className="px-6 py-3 font-semibold">
-              Go to Photo Editor
-            </PageLinks>
-            <DownloadButton targetRef={framePreviewRef} />
-          </div>
-        </section>
-
-        <section className="flex w-full justify-center lg:w-auto items-start">
-          <div
-            className="relative inline-block transition-all duration-300"
-            style={frameStyle}
-            ref={framePreviewRef}
-          >
-            <PhotoStrips photos={photos} className="h-120 w-40 bg-transparent" />
-
-            {showTopText ? (
-              <div className="pointer-events-none absolute inset-x-1 top-1 flex justify-center px-1 text-center">
-                <span style={frameTextStyle}>{trimmedText}</span>
+                {showBottomText ? (
+                  <div className="pointer-events-none absolute inset-x-1 bottom-2 flex justify-center px-1 text-center">
+                    <span style={frameTextStyle}>{trimmedText}</span>
+                  </div>
+                ) : null}
               </div>
-            ) : null}
+            </div>
 
-            {showBottomText ? (
-              <div className="pointer-events-none absolute inset-x-1 bottom-2 flex justify-center px-1 text-center">
-                <span style={frameTextStyle}>{trimmedText}</span>
+            {/* Editor Controls */}
+            <div className="flex w-full flex-col gap-6 lg:flex-1">
+              <div className="rounded-2xl bg-white/95 p-6 shadow-xl backdrop-blur-sm">
+                <div className="mb-6">
+                  <p className="text-sm uppercase tracking-[0.2em] text-purple-500">
+                    Edit
+                  </p>
+                  <h1 className="text-3xl font-black text-slate-800">
+                    Customize your strip
+                  </h1>
+                  <p className="mt-2 text-sm text-slate-600">
+                    Pick a photo booth frame color and add custom text to your strip.
+                  </p>
+                </div>
+
+                <div className="space-y-6">
+                  <FrameEditor
+                    selectedFrameType={selectedFrameType}
+                    onFrameTypeChange={setSelectedFrameType}
+                    topAdjust={topAdjust}
+                    onTopAdjustChange={setTopAdjust}
+                    bottomAdjust={bottomAdjust}
+                    onBottomAdjustChange={setBottomAdjust}
+                    selectedFrameColor={selectedFrameColor}
+                    onFrameColorChange={setSelectedFrameColor}
+                    customFrameColor={customFrameColor}
+                    onCustomFrameColorClick={() => setFrameColorPickerOpen(true)}
+                  />
+
+                  {allowFrameText ? (
+                    <TextEditor
+                      frameText={frameText}
+                      onFrameTextChange={setFrameText}
+                      selectedTextStyle={selectedTextStyle}
+                      onTextStyleChange={setSelectedTextStyle}
+                      selectedTextColor={selectedTextColor}
+                      onTextColorChange={setSelectedTextColor}
+                      customTextColor={customTextColor}
+                      onCustomTextColorClick={() => setTextColorPickerOpen(true)}
+                      fontSize={fontSize}
+                      onFontSizeChange={setFontSize}
+                      fontSliderMax={fontSliderMax}
+                      fontWeight={fontWeight}
+                      onFontWeightChange={setFontWeight}
+                      isItalic={isItalic}
+                      onItalicToggle={setIsItalic}
+                    />
+                  ) : null}
+                </div>
               </div>
-            ) : null}
+
+              {/* Action Buttons */}
+              <div className="flex w-full flex-col gap-4 sm:flex-row">
+                <PageLinks
+                  to="/"
+                  variant="blue"
+                  className="flex-1 px-4 py-2 text-center font-semibold"
+                >
+                  Home
+                </PageLinks>
+
+                <PageLinks
+                  to="/booth"
+                  variant="red"
+                  className="flex-1 px-4 py-2 text-center font-semibold"
+                >
+                  New Photo
+                </PageLinks>
+
+                <DownloadButton
+                  targetRef={framePreviewRef}
+                  className="flex-1 px-4 py-2"
+                />
+              </div>
+            </div>
           </div>
-        </section>
+        </Blur>
       </div>
+
       {isFrameColorPickerOpen ? (
         <ColorPicker
           title="Custom frame color"
@@ -309,6 +335,6 @@ export default function PhotoEditPage() {
           onClose={() => setTextColorPickerOpen(false)}
         />
       ) : null}
-    </div>
+    </>
   );
 }

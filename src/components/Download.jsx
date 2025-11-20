@@ -29,11 +29,10 @@ export default function DownloadButton({
     <button
       type="button"
       onClick={handleDownload}
-      disabled={isDisabled}
-      className={`inline-flex items-center gap-2 rounded-md bg-emerald-500 px-6 py-3 font-semibold text-white shadow transition hover:bg-emerald-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
+      className={`flex items-center justify-center gap-2 text-black font-semibold rounded-md border border-green-400 bg-green-300 p-1 hover:bg-green-400 ${className}`}
     >
       <Download className="h-4 w-4" aria-hidden="true" />
-      {isDownloading ? "Preparing..." : "Download Photo"}
+      <span>{isDownloading ? "Preparing..." : "Download Photo"}</span>
     </button>
   );
 }

@@ -9,7 +9,7 @@ export default function PageLinks({
   ...linkProps
 }) {
   const base =
-    "flex items-center justify-center p-1 rounded border ";
+    "flex items-center justify-center p-1 rounded-md text-black font-semibold border ";
   const colors = {
     blue: "bg-blue-300 hover:bg-blue-400 border-blue-400",
     red: "bg-red-300 hover:bg-red-400 border-red-400",
