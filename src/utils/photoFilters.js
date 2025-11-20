@@ -3,7 +3,7 @@ export const PHOTO_FILTERS = [
   {
     id: "retro",
     label: "Retro",
-    css: "contrast(1.15) sepia(0.4) saturate(1.25) hue-rotate(-5deg)",
+    css: "contrast(1.1) sepia(0.5) saturate(1.25) hue-rotate(-5deg)",
   },
   {
     id: "monochrome",
@@ -15,7 +15,6 @@ export const PHOTO_FILTERS = [
     label: "Film",
     // Settings: Exposure +14, Contrast -21, Vibrance +27
     css: "url(#custom-film) brightness(1.14) contrast(0.79) saturate(1.27)",
-    overlayClassName: "filter-overlay--film",
     effects: {
       warmthOverlayOpacity: 0.16,
       vignetteStrength: 0.35,

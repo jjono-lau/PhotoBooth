@@ -81,16 +81,18 @@ export default function HeroPage() {
               </section>
             </div>
           </div>
-         
+
         </div>
-        
-         <PageLinks
+
+        <div className="mt-5 flex items-center justify-center sm:mt-6 md:mt-7 lg:mt-8">
+          <PageLinks
             to="/booth"
             variant="purple"
-            className="m-2 md:m-3"
+            className="w-full"
           >
             Launch the Booth
           </PageLinks>
+        </div>
       </Blur>
     </div>
   );
