@@ -33,6 +33,12 @@ export default function RetakePhoto({
 
   const handleRetake = () => {
     if (!canRetake) return;
+
+    // Ensure video is playing (browser might pause it when covered)
+    if (videoRef.current && videoRef.current.paused) {
+      videoRef.current.play().catch(() => { });
+    }
+
     if (typeof onRetakeStart === "function") onRetakeStart();
     if (startCountdown) startCountdown(executeRetake, countdownValue);
     else executeRetake();
